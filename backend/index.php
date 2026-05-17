@@ -32,6 +32,8 @@ require_once __DIR__ . '/src/Controllers/RequestController.php';
 require_once __DIR__ . '/src/Controllers/AdminController.php';
 require_once __DIR__ . '/src/Controllers/VendorController.php';
 require_once __DIR__ . '/src/Controllers/TenderController.php';
+require_once __DIR__ . '/src/Controllers/CompanyController.php';
+require_once __DIR__ . '/src/Controllers/LPOController.php';
 
 // Parse URL
 $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -138,6 +140,30 @@ try {
             } else {
                 if ($method === 'GET') TenderController::show($p1);
                 if ($method === 'PUT') TenderController::update($p1, $body);
+            }
+            break;
+
+        // ── Companies ───────────────────────────────────────────
+        case 'companies':
+            if ($p1 === null) {
+                if ($method === 'GET')  CompanyController::index();
+                if ($method === 'POST') CompanyController::store(); // multipart
+            } else {
+                if ($method === 'GET')    CompanyController::show($p1);
+                if ($method === 'PUT')    CompanyController::update($p1, $body);
+                if ($method === 'DELETE') CompanyController::destroy($p1);
+            }
+            break;
+
+        // ── LPOs ─────────────────────────────────────────────────
+        case 'lpos':
+            if ($p1 === null) {
+                if ($method === 'GET')  LPOController::index();
+                if ($method === 'POST') LPOController::store($body);
+            } else {
+                if ($method === 'GET')    LPOController::show($p1);
+                if ($method === 'PUT')    LPOController::update($p1, $body);
+                if ($method === 'DELETE') LPOController::destroy($p1);
             }
             break;
 

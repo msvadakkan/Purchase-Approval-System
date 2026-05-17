@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Serve real files and directories as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Don't rewrite /api requests (pass through to PHP backend)
+RewriteRule ^api/ - [L]
+
+# Route everything else to React SPA
+RewriteRule ^ index.html [L]

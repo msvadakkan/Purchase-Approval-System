@@ -42,6 +42,39 @@ class DB {
             ]);
         }
 
+        // Seed demo company
+        $adminUser = self::$client->{self::$dbName}->selectCollection('users')->findOne(['email' => 'admin@company.com']);
+        self::$client->{self::$dbName}->selectCollection('companies')->insertMany([
+            [
+                'name'             => 'Alpha Trading LLC',
+                'trade_license_no' => 'DED-2024-001',
+                'vat_number'       => '100234567890003',
+                'address'          => 'Office 401, Tower A, Business Bay',
+                'city'             => 'Dubai',
+                'country'          => 'UAE',
+                'phone'            => '+971 4 123 4567',
+                'email'            => 'info@alphatrading.ae',
+                'website'          => 'www.alphatrading.ae',
+                'logo_filename'    => null,
+                'owner_id'         => $adminUser ? (string)$adminUser['_id'] : 'admin',
+                'created_at'       => utcNow(),
+            ],
+            [
+                'name'             => 'Beta Supplies FZE',
+                'trade_license_no' => 'JAFZA-2024-088',
+                'vat_number'       => '100456789012003',
+                'address'          => 'Warehouse 12, Jebel Ali Free Zone',
+                'city'             => 'Dubai',
+                'country'          => 'UAE',
+                'phone'            => '+971 4 987 6543',
+                'email'            => 'info@betasupplies.ae',
+                'website'          => 'www.betasupplies.ae',
+                'logo_filename'    => null,
+                'owner_id'         => $adminUser ? (string)$adminUser['_id'] : 'admin',
+                'created_at'       => utcNow(),
+            ],
+        ]);
+
         self::$client->{self::$dbName}->selectCollection('approval_levels')->insertMany([
             ['role' => 'manager',         'label' => 'Manager',         'max_amount' => 5000,      'updated_at' => utcNow()],
             ['role' => 'department_head', 'label' => 'Department Head', 'max_amount' => 25000,     'updated_at' => utcNow()],

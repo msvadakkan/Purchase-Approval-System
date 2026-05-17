@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
+import { Shield, Crown, Building2, UserCog, HardHat, Plus, Pencil, Trash2, UserPlus } from 'lucide-react';
 import api from '../api';
 
 const ROLES = [
-  { value: 'admin',           label: 'Administrator',    icon: '🛡️' },
-  { value: 'ceo',             label: 'CEO',              icon: '👑' },
-  { value: 'department_head', label: 'Department Head',  icon: '🏛️' },
-  { value: 'manager',         label: 'Manager',          icon: '👤' },
-  { value: 'employee',        label: 'Employee',         icon: '👷' },
+  { value: 'admin',           label: 'Administrator',   Icon: Shield    },
+  { value: 'ceo',             label: 'CEO',             Icon: Crown     },
+  { value: 'department_head', label: 'Department Head', Icon: Building2 },
+  { value: 'manager',         label: 'Manager',         Icon: UserCog   },
+  { value: 'employee',        label: 'Employee',        Icon: HardHat   },
 ];
 
 const ROLE_COLORS = {
@@ -93,7 +94,7 @@ function ApprovalLevels() {
             return (
               <div key={level.role} className="flex items-center gap-5 p-4 bg-gray-50 rounded-xl">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <span className="text-2xl">{ROLES.find(r => r.value === level.role)?.icon ?? '👤'}</span>
+                  {(() => { const R = ROLES.find(r => r.value === level.role); return R ? <div className="w-9 h-9 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0"><R.Icon className="w-4 h-4 text-indigo-600" /></div> : <div className="w-9 h-9 bg-gray-200 rounded-xl" />; })()}
                   <div>
                     <p className="font-semibold text-gray-900 text-sm">{level.label}</p>
                     {!isCEO && i < levels.length - 1 && (
@@ -194,9 +195,9 @@ function UsersTab() {
           <h3 className="font-semibold text-gray-900">Users ({users.length})</h3>
           <button
             onClick={openCreate}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
           >
-            + Add User
+            <UserPlus className="w-4 h-4" /> Add User
           </button>
         </div>
 
@@ -218,7 +219,8 @@ function UsersTab() {
                     <td className="px-5 py-4 text-sm font-medium text-gray-900">{u.name}</td>
                     <td className="px-5 py-4 text-sm text-gray-600">{u.email}</td>
                     <td className="px-5 py-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${ROLE_COLORS[u.role]}`}>
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${ROLE_COLORS[u.role]}`}>
+                        {(() => { const R = ROLES.find(r => r.value === u.role); return R ? <R.Icon className="w-3 h-3" /> : null; })()}
                         {ROLES.find(r => r.value === u.role)?.label ?? u.role}
                       </span>
                     </td>
@@ -230,8 +232,8 @@ function UsersTab() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="flex gap-2">
-                        <button onClick={() => openEdit(u)} className="px-3 py-1 border border-gray-300 text-gray-600 text-xs font-medium rounded-lg hover:bg-gray-50">Edit</button>
-                        <button onClick={() => handleDelete(u)} className="px-3 py-1 border border-red-200 text-red-600 text-xs font-medium rounded-lg hover:bg-red-50">Delete</button>
+                        <button onClick={() => openEdit(u)} className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-colors"><Pencil className="w-3 h-3" /> Edit</button>
+                        <button onClick={() => handleDelete(u)} className="flex items-center gap-1.5 px-3 py-1.5 border border-red-200 text-red-600 text-xs font-semibold rounded-lg hover:bg-red-50 transition-colors"><Trash2 className="w-3 h-3" /> Delete</button>
                       </div>
                     </td>
                   </tr>
