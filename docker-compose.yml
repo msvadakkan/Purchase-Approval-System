@@ -30,10 +30,11 @@ services:
     volumes:
       - uploads:/var/www/html/uploads
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/"]
+      test: ["CMD", "curl", "-sf", "http://localhost/api/health"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 12
+      start_period: 30s
 
   # ── React Frontend (Nginx) ───────────────────────────────────────────────────
   frontend:

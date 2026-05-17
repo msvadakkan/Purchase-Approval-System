@@ -1,7 +1,6 @@
 RewriteEngine On
-RewriteBase /api
 
-# Set your MongoDB Atlas URI here
+# Set your MongoDB Atlas URI here for cPanel hosting
 # SetEnv MONGODB_URI "mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/purchase_approval?retryWrites=true&w=majority"
 
 RewriteCond %{REQUEST_FILENAME} !-f
