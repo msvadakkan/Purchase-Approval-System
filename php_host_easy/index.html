@@ -3,18 +3,232 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Magenta Investments LLC — Purchase Approval</title>
+  <title>Magenta Investments LLC — Procurement System</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/main.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    /* Page-specific overrides */
-    body { overflow-x: hidden; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #faf5ff; color: #1e293b; min-height: 100vh; }
+
+    /* Nav */
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid #f0e6ff;
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+      box-shadow: 0 1px 8px rgba(124,58,237,.06);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+    .nav-logo .mark { width: 38px; height: 38px; background: linear-gradient(135deg,#7c3aed,#a855f7); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fff; font-size: 1.1rem; }
+    .nav-logo .name { font-weight: 800; font-size: 1rem; color: #1e1035; }
+    .nav-logo .name span { display: block; font-size: .7rem; font-weight: 500; color: #7c3aed; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1e1035 0%, #3b0764 50%, #2e1065 100%);
+      color: #fff;
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+    }
+    .hero .logo-img { width: 200px; height: auto; margin: 0 auto 2rem; display: block; filter: brightness(0) invert(1); }
+    .hero h1 { font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 900; letter-spacing: -.03em; margin-bottom: .75rem; }
+    .hero h1 span { color: #c084fc; }
+    .hero p  { font-size: 1.05rem; opacity: .75; max-width: 520px; margin: 0 auto 2rem; line-height: 1.6; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+    .badge { display: inline-flex; align-items: center; gap: .375rem; padding: .375rem .875rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 9999px; font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.85); }
+
+    /* Stats bar */
+    .stats-bar { background: #7c3aed; padding: 1.75rem 2rem; }
+    .stats-inner { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; text-align: center; }
+    .stat-val { font-size: 1.75rem; font-weight: 900; color: #fff; line-height: 1; }
+    .stat-lbl { font-size: .75rem; color: #ddd6fe; margin-top: .3rem; font-weight: 500; }
+
+    /* Main */
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem; }
+    .section { padding: 3.5rem 0; }
+    .section-title { font-size: 1.5rem; font-weight: 800; color: #1e1035; margin-bottom: .5rem; }
+    .section-sub { color: #6b7280; font-size: .9rem; margin-bottom: 2rem; }
+
+    /* Portal Cards */
+    .portals { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .portal-card {
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      display: flex; flex-direction: column;
+    }
+    .portal-header { padding: 2rem 2rem 1.25rem; }
+    .portal-header .icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem; }
+    .portal-header h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: .5rem; }
+    .portal-header p  { font-size: .875rem; opacity: .8; line-height: 1.6; }
+    .portal-links { padding: 1rem 2rem 1.25rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
+    .portal-link {
+      display: flex; align-items: center; gap: .625rem;
+      padding: .6rem .875rem; border-radius: .625rem;
+      font-size: .875rem; font-weight: 600;
+      text-decoration: none; transition: background .15s;
+    }
+    .portal-link .link-icon { width: 30px; height: 30px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; font-size: .875rem; flex-shrink: 0; }
+    .portal-link span.lbl { flex: 1; }
+    .portal-link .arrow { font-size: .75rem; opacity: .4; }
+    .portal-footer { padding: 1.25rem 2rem 1.75rem; }
+    .portal-btn {
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      padding: .8rem; border-radius: .75rem; font-weight: 700; font-size: .9rem;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .portal-btn:hover { opacity: .88; }
+
+    /* Staff Portal — deep violet */
+    .card-staff { background: linear-gradient(145deg, #1e1035 0%, #3b0764 100%); color: #fff; }
+    .card-staff .portal-link { color: rgba(255,255,255,.85); }
+    .card-staff .portal-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .card-staff .portal-link .link-icon { background: rgba(255,255,255,.12); }
+    .card-staff .portal-btn { background: #7c3aed; color: #fff; }
+
+    /* Vendor Portal — teal */
+    .card-vendor { background: linear-gradient(145deg, #042f2e 0%, #134e4a 100%); color: #fff; }
+    .card-vendor .portal-link { color: rgba(255,255,255,.85); }
+    .card-vendor .portal-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .card-vendor .portal-link .link-icon { background: rgba(255,255,255,.12); }
+    .card-vendor .portal-btn { background: #0d9488; color: #fff; }
+
+    /* Subsidiaries */
+    .sub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .sub-card { background: #fff; border: 1.5px solid #ede9fe; border-radius: 1rem; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: .875rem; }
+    .sub-icon { width: 38px; height: 38px; background: #7c3aed; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+    .sub-name { font-weight: 700; color: #1e1035; font-size: .9rem; }
+    .sub-desc { color: #6b7280; font-size: .78rem; line-height: 1.5; margin-top: .15rem; }
+
+    /* Footer */
+    footer { background: #1e1035; color: #a78bfa; text-align: center; padding: 2rem 1.5rem; font-size: .8rem; border-top: 1px solid #2d1b69; }
+    footer a { color: #c084fc; text-decoration: none; }
+    footer .contact-row { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-bottom: .75rem; }
+
+    @media (max-width: 640px) {
+      .hero { padding: 3rem 1rem 2.5rem; }
+      .nav { padding: 0 1rem; }
+    }
   </style>
 </head>
 <body>
-  <!-- App shell injected by app.js -->
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/app.js"></script>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <a class="nav-logo" href="index.html">
+      <div class="mark">M</div>
+      <div class="name">Magenta Investments<span>Procurement Portal</span></div>
+    </a>
+    <div style="display:flex;gap:.625rem">
+      <a href="about.html" style="padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:600;color:#7c3aed;text-decoration:none">About</a>
+      <a href="portal.html" style="padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;border:1.5px solid #7c3aed;color:#7c3aed;text-decoration:none">Staff Login</a>
+      <a href="vendor-login.html" style="padding:.5rem 1.25rem;border-radius:8px;font-size:.85rem;font-weight:700;background:#7c3aed;color:#fff;text-decoration:none">Vendor Portal</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <img class="logo-img" src="https://magenta-investments.com/wp-content/uploads/2025/08/Logo.png" alt="Magenta Investments LLC" onerror="this.style.display='none'" />
+    <h1>Where Innovation Heals,<br/><span>and Care Leads</span></h1>
+    <p>Secure internal procurement portal for purchase approvals, vendor management, and tender workflows across all Magenta Investments healthcare brands.</p>
+    <div class="badge-row">
+      <span class="badge">📢 Department Tenders</span>
+      <span class="badge">🏪 Vendor Portal</span>
+      <span class="badge">📋 Purchase Requests</span>
+      <span class="badge">✅ Approval Workflows</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div><div class="stat-val">500K+</div><div class="stat-lbl">Clients Served</div></div>
+      <div><div class="stat-val">20+</div><div class="stat-lbl">Years of Excellence</div></div>
+      <div><div class="stat-val">4.8/5</div><div class="stat-lbl">Average Rating</div></div>
+      <div><div class="stat-val">6+</div><div class="stat-lbl">Healthcare Brands</div></div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Portals -->
+    <div class="section">
+      <div class="section-title">Access Your Portal</div>
+      <div class="section-sub">Two secure portals — one for internal staff, one for registered vendors.</div>
+      <div class="portals">
+
+        <!-- Staff Portal -->
+        <div class="portal-card card-staff">
+          <div class="portal-header">
+            <div class="icon" style="background:rgba(255,255,255,.12)">🏢</div>
+            <h2>Staff Portal</h2>
+            <p>For employees, managers, department heads, CEOs, and system administrators.</p>
+          </div>
+          <div class="portal-footer" style="margin-top:auto">
+            <a href="portal.html" class="portal-btn">🔐 Sign In with Company Account →</a>
+          </div>
+        </div>
+
+        <!-- Vendor Portal -->
+        <div class="portal-card card-vendor">
+          <div class="portal-header">
+            <div class="icon" style="background:rgba(255,255,255,.12)">🏪</div>
+            <h2>Vendor Portal</h2>
+            <p>For registered suppliers and service providers to bid on open procurement tenders.</p>
+          </div>
+          <div class="portal-footer" style="margin-top:auto;display:flex;gap:.75rem">
+            <a href="vendor-login.html" class="portal-btn" style="flex:1">🔐 Vendor Sign In</a>
+            <a href="vendor-register.html" class="portal-btn" style="flex:1;background:rgba(255,255,255,.15)">📝 Register</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Subsidiaries -->
+    <div class="section" style="padding-top:0">
+      <div class="section-title">Our Healthcare Portfolio</div>
+      <div class="section-sub">Procurement spans all six Magenta Investments healthcare entities.</div>
+      <div class="sub-grid">
+        <div class="sub-card">
+          <div class="sub-icon" style="background:#f5f3ff;padding:4px"><img src="https://magenta-investments.com/wp-content/uploads/2026/02/magenta-medical.png" alt="Magenta Medical" style="width:30px;height:30px;object-fit:contain" onerror="this.parentElement.innerHTML='🏥'" /></div>
+          <div><div class="sub-name">Magenta Medical</div><div class="sub-desc">Hospital operations &amp; integrated medical services</div></div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-icon" style="background:#f5f3ff;padding:4px"><img src="https://magenta-investments.com/wp-content/uploads/2026/01/rx-plus.png" alt="RX-Plus" style="width:30px;height:30px;object-fit:contain" onerror="this.parentElement.innerHTML='💊'" /></div>
+          <div><div class="sub-name">RX-Plus</div><div class="sub-desc">Compounding pharmacy solutions</div></div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-icon" style="background:#f5f3ff;padding:4px"><img src="https://magenta-investments.com/wp-content/uploads/2026/01/home-health.png" alt="Magenta Home Health" style="width:30px;height:30px;object-fit:contain" onerror="this.parentElement.innerHTML='🏠'" /></div>
+          <div><div class="sub-name">Magenta Home Health</div><div class="sub-desc">In-home healthcare &amp; nursing services</div></div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-icon" style="background:#f5f3ff;padding:4px"><img src="https://magenta-investments.com/wp-content/uploads/2026/01/good-health.png" alt="Good Health" style="width:30px;height:30px;object-fit:contain" onerror="this.parentElement.innerHTML='🩺'" /></div>
+          <div><div class="sub-name">Good Health</div><div class="sub-desc">Community clinics &amp; pharmacy network</div></div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-icon" style="background:#f5f3ff;padding:4px"><img src="https://magenta-investments.com/wp-content/uploads/2026/01/health-plus.png" alt="Health Plus" style="width:30px;height:30px;object-fit:contain" onerror="this.parentElement.innerHTML='🏨'" /></div>
+          <div><div class="sub-name">Health Plus</div><div class="sub-desc">Multi-specialty outpatient clinics</div></div>
+        </div>
+        <div class="sub-card">
+          <div class="sub-icon" style="background:#f5f3ff;padding:4px"><img src="https://magenta-investments.com/wp-content/uploads/2026/01/magenta-pharma.png" alt="Magenta Pharma" style="width:30px;height:30px;object-fit:contain" onerror="this.parentElement.innerHTML='🚚'" /></div>
+          <div><div class="sub-name">Magenta Pharma</div><div class="sub-desc">Pharmaceuticals &amp; medical supplies distribution</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="contact-row">
+      <a href="tel:+97142222500">📞 +971 4 222 2500</a>
+      <a href="mailto:info@magenta-investments.com">✉️ info@magenta-investments.com</a>
+      <span>📍 4903 Aspin Commercial Tower, Sheikh Zayed Road, Dubai, UAE</span>
+    </div>
+    <div>© 2025 Magenta Investments LLC &nbsp;·&nbsp; Procurement System v2.0 &nbsp;·&nbsp; <a href="about.html">About</a> &nbsp;·&nbsp; Developed by msvadakkan</div>
+  </footer>
+
 </body>
 </html>

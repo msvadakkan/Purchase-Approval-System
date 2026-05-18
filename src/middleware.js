@@ -7,6 +7,7 @@ const PUBLIC_API = [
   '/api/auth/microsoft/redirect',
   '/api/auth/microsoft/callback',
   '/api/vendors/login',
+  '/api/setup',   // initial setup — blocks itself once admin exists
   '/api/health',
 ]
 
