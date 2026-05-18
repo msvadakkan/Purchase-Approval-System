@@ -1,5 +1,15 @@
 import nodemailer from 'nodemailer'
 
+// Escape HTML to prevent injection in email body content
+function esc(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 function getTransporter() {
   return nodemailer.createTransport({
     host:   process.env.SMTP_HOST || 'smtp.office365.com',
@@ -50,12 +60,12 @@ function fmtAmount(n) {
 function requestSubmittedEmail(req, requesterName) {
   const body = `
     <h2>Request Submitted</h2>
-    <p>Hi ${requesterName},</p>
+    <p>Hi ${esc(requesterName)},</p>
     <p>Your purchase request has been submitted successfully and is awaiting approval.</p>
     <table class="meta"><tbody>
-      <tr><td>Request Title</td><td><strong>${req.title}</strong></td></tr>
+      <tr><td>Request Title</td><td><strong>${esc(req.title)}</strong></td></tr>
       <tr><td>Amount</td><td><p class="amount">${fmtAmount(req.amount)}</p></td></tr>
-      <tr><td>Category</td><td>${req.category || '—'}</td></tr>
+      <tr><td>Category</td><td>${esc(req.category || '—')}</td></tr>
       <tr><td>Status</td><td><span class="status-pending">Pending Approval</span></td></tr>
     </tbody></table>
     <p>You will be notified once a decision has been made.</p>`
@@ -65,12 +75,12 @@ function requestSubmittedEmail(req, requesterName) {
 function requestApprovedEmail(req, requesterName, approverName) {
   const body = `
     <h2>Request Approved</h2>
-    <p>Hi ${requesterName},</p>
+    <p>Hi ${esc(requesterName)},</p>
     <p>Great news! Your purchase request has been <strong>approved</strong>.</p>
     <table class="meta"><tbody>
-      <tr><td>Request Title</td><td><strong>${req.title}</strong></td></tr>
+      <tr><td>Request Title</td><td><strong>${esc(req.title)}</strong></td></tr>
       <tr><td>Amount</td><td><p class="amount">${fmtAmount(req.amount)}</p></td></tr>
-      <tr><td>Approved By</td><td>${approverName}</td></tr>
+      <tr><td>Approved By</td><td>${esc(approverName)}</td></tr>
       <tr><td>Status</td><td><span class="status-approved">Approved</span></td></tr>
     </tbody></table>`
   return { subject: `Approved: ${req.title}`, html: baseTemplate('Request Approved', body) }
@@ -79,14 +89,14 @@ function requestApprovedEmail(req, requesterName, approverName) {
 function requestRejectedEmail(req, requesterName, approverName, comments) {
   const body = `
     <h2>Request Rejected</h2>
-    <p>Hi ${requesterName},</p>
+    <p>Hi ${esc(requesterName)},</p>
     <p>Unfortunately, your purchase request has been <strong>rejected</strong>.</p>
     <table class="meta"><tbody>
-      <tr><td>Request Title</td><td><strong>${req.title}</strong></td></tr>
+      <tr><td>Request Title</td><td><strong>${esc(req.title)}</strong></td></tr>
       <tr><td>Amount</td><td>${fmtAmount(req.amount)}</td></tr>
-      <tr><td>Rejected By</td><td>${approverName}</td></tr>
+      <tr><td>Rejected By</td><td>${esc(approverName)}</td></tr>
       <tr><td>Status</td><td><span class="status-rejected">Rejected</span></td></tr>
-      ${comments ? `<tr><td>Reason</td><td>${comments}</td></tr>` : ''}
+      ${comments ? `<tr><td>Reason</td><td>${esc(comments)}</td></tr>` : ''}
     </tbody></table>
     <p>Please contact your manager for more information or resubmit a revised request.</p>`
   return { subject: `Rejected: ${req.title}`, html: baseTemplate('Request Rejected', body) }
@@ -95,13 +105,13 @@ function requestRejectedEmail(req, requesterName, approverName, comments) {
 function approvalPendingEmail(req, approverName, requesterName) {
   const body = `
     <h2>Approval Required</h2>
-    <p>Hi ${approverName},</p>
+    <p>Hi ${esc(approverName)},</p>
     <p>A new purchase request requires your approval.</p>
     <table class="meta"><tbody>
-      <tr><td>Request Title</td><td><strong>${req.title}</strong></td></tr>
-      <tr><td>Requested By</td><td>${requesterName}</td></tr>
+      <tr><td>Request Title</td><td><strong>${esc(req.title)}</strong></td></tr>
+      <tr><td>Requested By</td><td>${esc(requesterName)}</td></tr>
       <tr><td>Amount</td><td><p class="amount">${fmtAmount(req.amount)}</p></td></tr>
-      <tr><td>Category</td><td>${req.category || '—'}</td></tr>
+      <tr><td>Category</td><td>${esc(req.category || '—')}</td></tr>
       <tr><td>Status</td><td><span class="status-pending">Awaiting Your Approval</span></td></tr>
     </tbody></table>
     <p>Please log in to the system to review and take action.</p>`

@@ -22,15 +22,23 @@ export async function GET(request) {
   }
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export async function POST(request) {
   try {
     const formData = await request.formData()
     const required = ['company_name', 'vat_number', 'contact_number', 'sales_person', 'address', 'email', 'password']
     for (const f of required) {
-      if (!formData.get(f)) return NextResponse.json({ error: `Field '${f}' is required` }, { status: 400 })
+      if (!formData.get(f)?.toString().trim()) return NextResponse.json({ error: `Field '${f}' is required` }, { status: 400 })
     }
 
-    const email = formData.get('email')
+    const email = formData.get('email').toString().trim().toLowerCase()
+    if (!EMAIL_RE.test(email))
+      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 })
+    const password = formData.get('password').toString()
+    if (password.length < 6 || password.length > 128)
+      return NextResponse.json({ error: 'Password must be 6–128 characters' }, { status: 400 })
+
     if (await (await col('vendors')).countDocuments({ email }))
       return NextResponse.json({ error: 'Email already registered' }, { status: 409 })
 
@@ -50,13 +58,13 @@ export async function POST(request) {
 
     const bcrypt = (await import('bcryptjs')).default
     const result = await (await col('vendors')).insertOne({
-      company_name:   formData.get('company_name'),
-      vat_number:     formData.get('vat_number'),
-      contact_number: formData.get('contact_number'),
-      sales_person:   formData.get('sales_person'),
-      address:        formData.get('address'),
+      company_name:   formData.get('company_name').toString().trim(),
+      vat_number:     formData.get('vat_number').toString().trim(),
+      contact_number: formData.get('contact_number').toString().trim(),
+      sales_person:   formData.get('sales_person').toString().trim(),
+      address:        formData.get('address').toString().trim(),
       email,
-      password_hash:  await bcrypt.hash(formData.get('password'), 10),
+      password_hash:  await bcrypt.hash(password, 10),
       bank_details: {
         bank_name:      formData.get('bank_name')      || '',
         account_name:   formData.get('account_name')   || '',

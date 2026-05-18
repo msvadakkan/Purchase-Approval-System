@@ -10,6 +10,11 @@ const PUBLIC_API = [
   '/api/health',
 ]
 
+// Routes where POST is public (vendor self-registration) but GET requires auth
+const PUBLIC_POST_ONLY = [
+  '/api/vendors',
+]
+
 function secret() {
   return new TextEncoder().encode(process.env.JWT_SECRET || 'purchase-approval-secret-2024')
 }
@@ -33,6 +38,7 @@ export async function middleware(request) {
   // ── Guard API routes ──────────────────────────────────────────────────────
   if (pathname.startsWith('/api/')) {
     const isPublic = PUBLIC_API.some(p => pathname.startsWith(p))
+      || (request.method === 'POST' && PUBLIC_POST_ONLY.some(p => pathname === p))
 
     if (!isPublic) {
       const auth  = request.headers.get('authorization') || ''
