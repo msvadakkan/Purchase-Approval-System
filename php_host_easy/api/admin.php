@@ -45,9 +45,9 @@ if ($method === 'PUT' && $path === 'approval-levels') {
 if ($method === 'GET' && $path === 'stats') {
     require_auth();
     json_ok([
-        'total_requests'   => db()->purchase_requests->countDocuments([]),
-        'pending_requests' => db()->purchase_requests->countDocuments(['status' => 'pending']),
-        'approved_requests'=> db()->purchase_requests->countDocuments(['status' => 'approved']),
+        'total_requests'   => db()->requests->countDocuments([]),
+        'pending_requests' => db()->requests->countDocuments(['status' => 'pending']),
+        'approved_requests'=> db()->requests->countDocuments(['status' => 'approved']),
         'total_vendors'    => db()->vendors->countDocuments([]),
         'pending_vendors'  => db()->vendors->countDocuments(['status' => 'pending']),
         'open_tenders'     => db()->tenders->countDocuments(['status' => 'open']),

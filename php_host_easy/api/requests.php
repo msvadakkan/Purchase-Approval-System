@@ -26,10 +26,17 @@ if ($method === 'GET' && !$id) {
     $filter = [];
     if ($user['role'] !== 'admin') {
         $filter['$or'] = [
-            ['requester_id' => $user['id']],
+            ['requester_id' => $user['sub']],
             ['current_approver_role' => $user['role']],
-            ['history.approver_id' => $user['id']]
+            ['history.approver_id' => $user['sub']]
         ];
+    }
+    if (!empty($_GET['pending'])) {
+        $filter['status'] = 'pending';
+        if ($user['role'] !== 'admin') {
+            $filter['current_approver_role'] = $user['role'];
+            unset($filter['$or']);
+        }
     }
     $rows = iterator_to_array(db()->requests->find($filter, ['sort' => ['created_at' => -1]]));
     json_ok(array_map('mongo_doc', $rows));
@@ -48,7 +55,7 @@ if ($method === 'POST' && !$id) {
         'description'    => $b['description'] ?? '',
         'amount'         => $amount,
         'category'       => $b['category'] ?? 'General',
-        'requester_id'   => $user['id'],
+        'requester_id'   => $user['sub'],
         'requester_name' => $user['name'],
         'department'     => $user['department'] ?? '',
         'status'         => 'pending',
@@ -86,11 +93,11 @@ if ($method === 'POST' && $id && $action) {
         $status = ($action === 'approve') ? 'approved' : 'rejected';
         $history_item = [
             'id'            => new_id(),
-            'approver_id'   => $user['id'],
+            'approver_id'   => $user['sub'],
             'approver_name' => $user['name'],
             'approver_role' => $user['role'],
             'action'        => $status,
-            'comments'      => $b['comments'] ?? '',
+            'comments'      => $b['comments'] ?? $b['comment'] ?? '',
             'created_at'    => now_iso(),
         ];
         db()->requests->updateOne(['_id' => $id], ['$set' => ['status' => $status, 'current_approver_role' => null, 'updated_at' => now_iso()], '$push' => ['history' => $history_item]]);
@@ -98,7 +105,7 @@ if ($method === 'POST' && $id && $action) {
     }
 
     if ($action === 'cancel') {
-        if ($doc['requester_id'] !== $user['id'] && $user['role'] !== 'admin') json_err('Forbidden', 403);
+        if ($doc['requester_id'] !== $user['sub'] && $user['role'] !== 'admin') json_err('Forbidden', 403);
         db()->requests->updateOne(['_id' => $id], ['$set' => ['status' => 'cancelled', 'updated_at' => now_iso()]]);
         json_ok(['success' => true]);
     }

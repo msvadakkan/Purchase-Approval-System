@@ -326,8 +326,8 @@ async function renderRequestDetail(el, id) {
         ${(r.history || []).length ? `
           <h4 style="font-size:.9rem;font-weight:700;margin:1.25rem 0 .5rem">Approval History</h4>
           ${r.history.map(h => `<div style="padding:.625rem;background:var(--gray-50);border-radius:.5rem;margin-bottom:.5rem;font-size:.8rem">
-            <strong>${esc(h.by_name)}</strong> (${h.by_role}) — <em>${h.action}</em> — ${fmtDate(h.timestamp)}
-            ${h.comment ? `<div style="color:var(--gray-500);margin-top:.25rem">${esc(h.comment)}</div>` : ''}
+            <strong>${esc(h.approver_name)}</strong> (${esc(h.approver_role)}) — <em>${h.action}</em> — ${fmtDate(h.created_at)}
+            ${h.comments ? `<div style="color:var(--gray-500);margin-top:.25rem">${esc(h.comments)}</div>` : ''}
           </div>`).join('')}` : ''}
       </div>
     </div>`;
@@ -338,13 +338,13 @@ function canApprove() {
 }
 
 async function doApprove(id) {
-  const comment = prompt('Approval comment (optional):') ?? '';
-  try { await api.post('/requests/' + id + '/approve', { comment }); navigateTo('requests/' + id); }
+  const comments = prompt('Approval comment (optional):') ?? '';
+  try { await api.post('/requests/' + id + '/approve', { comments }); navigateTo('requests/' + id); }
   catch (err) { alert(err.data?.error || 'Failed'); }
 }
 async function doReject(id) {
-  const comment = prompt('Reason for rejection:') ?? '';
-  try { await api.post('/requests/' + id + '/reject', { comment }); navigateTo('requests/' + id); }
+  const comments = prompt('Reason for rejection:') ?? '';
+  try { await api.post('/requests/' + id + '/reject', { comments }); navigateTo('requests/' + id); }
   catch (err) { alert(err.data?.error || 'Failed'); }
 }
 async function doCancel(id) {

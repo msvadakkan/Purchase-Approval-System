@@ -36,7 +36,12 @@ if ($method === 'POST' && !$id) {
             json_err('Your account is pending admin approval', 403);
         }
 
-        $token = jwt_encode(['id' => (string)$vendor['_id'], 'email' => $vendor['email'], 'role' => 'vendor']);
+        $token = jwt_encode([
+            'sub'          => (string)$vendor['_id'],
+            'type'         => 'vendor',
+            'company_name' => $vendor['company_name'],
+            'exp'          => time() + 86400 * 7,
+        ]);
         json_ok(['token' => $token, 'vendor' => mongo_doc($vendor)]);
     }
 
@@ -62,6 +67,7 @@ if ($method === 'POST' && !$id) {
         'iban'          => $b['iban'] ?? '',
         'swift_code'    => $b['swift_code'] ?? '',
         'branch'        => $b['branch'] ?? '',
+        'categories'    => $b['categories'] ?? '',
         'status'        => 'pending',
         'created_at'    => now_iso(),
     ];

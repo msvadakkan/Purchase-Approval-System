@@ -18,10 +18,11 @@ if ($method === 'POST' && $path === 'login') {
     if (!($user['is_active'] ?? true)) json_err('Account disabled', 403);
 
     $token = jwt_encode([
-        'sub'  => (string)$user['_id'],
-        'role' => $user['role'],
-        'name' => $user['name'],
-        'exp'  => time() + 86400 * 7,
+        'sub'        => (string)$user['_id'],
+        'role'       => $user['role'],
+        'name'       => $user['name'],
+        'department' => $user['department'] ?? null,
+        'exp'        => time() + 86400 * 7,
     ]);
     json_ok(['token' => $token, 'user' => [
         'id'         => (string)$user['_id'],

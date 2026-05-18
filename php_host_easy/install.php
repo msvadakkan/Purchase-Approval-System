@@ -168,14 +168,14 @@ if ($step === 'install' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Create the super admin account
             $adminDoc = [
-                '_id'           => new_id(),
-                'name'          => $d['admin_name'],
-                'email'         => $d['admin_email'],
-                'role'          => 'admin',
-                'department'    => 'Management',
-                'is_active'     => true,
-                'password_hash' => $d['admin_hash'],
-                'created_at'    => now_iso(),
+                '_id'        => new_id(),
+                'name'       => $d['admin_name'],
+                'email'      => $d['admin_email'],
+                'role'       => 'admin',
+                'department' => 'Management',
+                'is_active'  => true,
+                'password'   => $d['admin_hash'],
+                'created_at' => now_iso(),
             ];
             db()->users->insertOne($adminDoc);
             $createdAdminEmail = $d['admin_email'];
@@ -691,6 +691,7 @@ async function testMongo(btn) {
   // Save current form values to session first
   const form = btn.closest('form');
   const fd = new FormData(form);
+  fd.delete('step');
   await fetch('install.php', { method:'POST', body: new URLSearchParams({ step:'step2', ...Object.fromEntries(fd) }) });
 
   btn.disabled = true; btn.textContent = 'Testing…';
@@ -706,7 +707,8 @@ async function testMongo(btn) {
 async function testSmtp(btn) {
   const form = btn.closest('form');
   const fd = new FormData(form);
-  await fetch('install.php', { method:'POST', body: new URLSearchParams({ step:'step4', ...Object.fromEntries(fd) }) });
+  fd.delete('step');
+  await fetch('install.php', { method:'POST', body: new URLSearchParams({ step:'step5', ...Object.fromEntries(fd) }) });
 
   btn.disabled = true; btn.textContent = 'Connecting…';
   const res = await fetch('install.php?step=test_smtp');
