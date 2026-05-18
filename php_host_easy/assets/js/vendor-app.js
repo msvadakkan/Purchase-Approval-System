@@ -327,8 +327,8 @@ function vendorShellHTML() {
     <div id="app">
       <nav id="sidebar" class="sidebar">
         <div class="sidebar-logo">
-          <div class="logo-icon" style="background:#0d9488">V</div>
-          <div><span>Vendor Portal</span><small>ProcureFlow</small></div>
+          <div class="logo-icon" style="background:#0d9488">M</div>
+          <div><span>Vendor Portal</span><small>Magenta Investments LLC</small></div>
         </div>
         <div id="sidebar-nav"></div>
         <div class="sidebar-footer" id="user-info"></div>

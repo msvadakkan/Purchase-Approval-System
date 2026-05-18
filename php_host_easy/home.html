@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magenta Investments LLC — Procurement System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #134e4a 100%);
+      color: #fff;
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+    }
+    .hero .logo { width: 72px; height: 72px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; color: #fff; margin: 0 auto 1.25rem; box-shadow: 0 8px 32px rgba(168,85,247,.4); }
+    .hero h1 { font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; letter-spacing: -.02em; margin-bottom: .5rem; }
+    .hero p  { font-size: 1rem; opacity: .7; max-width: 500px; margin: 0 auto; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; margin-top: 1.25rem; }
+    .badge { display: inline-flex; align-items: center; gap: .375rem; padding: .375rem .875rem; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); border-radius: 9999px; font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.85); }
+
+    /* Main */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+    .section { padding: 3rem 0; }
+    .section-title { font-size: 1.1rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.5rem; }
+
+    /* Portal Cards */
+    .portals { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+    .portal-card {
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      transition: transform .2s, box-shadow .2s;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+    }
+    .portal-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.15); }
+    .portal-header { padding: 2rem 1.75rem 1.25rem; }
+    .portal-header .icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1rem; }
+    .portal-header h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: .375rem; }
+    .portal-header p  { font-size: .875rem; opacity: .75; line-height: 1.5; }
+    .portal-links { padding: 1rem 1.75rem 1.5rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+    .portal-link {
+      display: flex; align-items: center; gap: .625rem;
+      padding: .625rem .875rem; border-radius: .625rem;
+      font-size: .875rem; font-weight: 600;
+      text-decoration: none; transition: background .15s;
+    }
+    .portal-link .link-icon { width: 30px; height: 30px; border-radius: .5rem; display: flex; align-items: center; justify-content: center; font-size: .9rem; flex-shrink: 0; }
+    .portal-link span { flex: 1; }
+    .portal-link .arrow { font-size: .75rem; opacity: .5; }
+    .portal-footer { padding: 1rem 1.75rem 1.5rem; border-top: 1px solid rgba(255,255,255,.1); }
+    .portal-btn {
+      display: flex; align-items: center; justify-content: center; gap: .5rem;
+      padding: .75rem; border-radius: .75rem; font-weight: 700; font-size: .9rem;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .portal-btn:hover { opacity: .9; }
+
+    /* Staff Portal */
+    .card-staff { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: #fff; }
+    .card-staff .portal-link { color: rgba(255,255,255,.85); }
+    .card-staff .portal-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .card-staff .portal-link .link-icon { background: rgba(255,255,255,.12); }
+    .card-staff .portal-btn { background: rgba(255,255,255,.15); color: #fff; }
+
+    /* Vendor Portal */
+    .card-vendor { background: linear-gradient(135deg, #042f2e 0%, #134e4a 100%); color: #fff; }
+    .card-vendor .portal-link { color: rgba(255,255,255,.85); }
+    .card-vendor .portal-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .card-vendor .portal-link .link-icon { background: rgba(255,255,255,.12); }
+    .card-vendor .portal-btn { background: rgba(255,255,255,.15); color: #fff; }
+
+    /* Setup Card */
+    .card-setup { background: #fff; border: 1px solid #e2e8f0; }
+    .card-setup .portal-link { color: #475569; }
+    .card-setup .portal-link:hover { background: #f8fafc; color: #1e293b; }
+    .card-setup .portal-link .link-icon { background: #f1f5f9; }
+    .card-setup .portal-btn { background: #f1f5f9; color: #334155; }
+
+    /* Quick info */
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .info-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.25rem 1.5rem; }
+    .info-card .label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #94a3b8; margin-bottom: .5rem; }
+    .info-card table { width: 100%; border-collapse: collapse; font-size: .825rem; }
+    .info-card td { padding: .25rem 0; vertical-align: top; }
+    .info-card td:first-child { font-weight: 600; color: #64748b; width: 55%; padding-right: .5rem; }
+    .info-card td:last-child { color: #1e293b; font-family: monospace; font-size: .8rem; }
+
+    /* Footer */
+    footer { text-align: center; padding: 2rem 1.5rem; font-size: .8rem; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+    footer a { color: #0d9488; text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .hero { padding: 2.5rem 1rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="logo">M</div>
+    <h1>Magenta Investments LLC</h1>
+    <p>Procurement &amp; Purchase Approval System — Internal Portal</p>
+    <div class="badge-row">
+      <span class="badge">🏢 Multi-Company</span>
+      <span class="badge">✅ Role-Based Approvals</span>
+      <span class="badge">📢 Tender Management</span>
+      <span class="badge">🧾 LPO Generation</span>
+      <span class="badge">🏪 Vendor Portal</span>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Portals -->
+    <div class="section">
+      <div class="section-title">Access Portals</div>
+      <div class="portals">
+
+        <!-- Staff Portal -->
+        <div class="portal-card card-staff">
+          <div class="portal-header">
+            <div class="icon" style="background:rgba(255,255,255,.12)">👔</div>
+            <h2>Staff Portal</h2>
+            <p>For employees, managers, department heads, CEOs, and admins</p>
+          </div>
+          <div class="portal-links">
+            <a href="index.html#dashboard"   class="portal-link"><span class="link-icon">⊞</span><span>Dashboard</span><span class="arrow">→</span></a>
+            <a href="index.html#requests"    class="portal-link"><span class="link-icon">📋</span><span>Purchase Requests</span><span class="arrow">→</span></a>
+            <a href="index.html#approvals"   class="portal-link"><span class="link-icon">✅</span><span>Pending Approvals</span><span class="arrow">→</span></a>
+            <a href="index.html#tenders"     class="portal-link"><span class="link-icon">📢</span><span>Tenders / Requirements</span><span class="arrow">→</span></a>
+            <a href="index.html#lpos"        class="portal-link"><span class="link-icon">🧾</span><span>Local Purchase Orders</span><span class="arrow">→</span></a>
+            <a href="index.html#vendors"     class="portal-link"><span class="link-icon">🏪</span><span>Vendor Registry</span><span class="arrow">→</span></a>
+            <a href="index.html#companies"   class="portal-link"><span class="link-icon">🏢</span><span>Companies</span><span class="arrow">→</span></a>
+            <a href="index.html#admin"       class="portal-link"><span class="link-icon">⚙️</span><span>Admin Panel</span><span class="arrow">→</span></a>
+          </div>
+          <div class="portal-footer">
+            <a href="index.html" class="portal-btn">🔐 Staff Login →</a>
+          </div>
+        </div>
+
+        <!-- Vendor Portal -->
+        <div class="portal-card card-vendor">
+          <div class="portal-header">
+            <div class="icon" style="background:rgba(255,255,255,.12)">🏪</div>
+            <h2>Vendor Portal</h2>
+            <p>For registered vendors to browse tenders and submit quotes</p>
+          </div>
+          <div class="portal-links">
+            <a href="vendor-portal.html#dashboard"  class="portal-link"><span class="link-icon">⊞</span><span>Vendor Dashboard</span><span class="arrow">→</span></a>
+            <a href="vendor-portal.html#tenders"    class="portal-link"><span class="link-icon">📢</span><span>Browse Open Tenders</span><span class="arrow">→</span></a>
+            <a href="vendor-portal.html#my-quotes"  class="portal-link"><span class="link-icon">💬</span><span>My Submitted Quotes</span><span class="arrow">→</span></a>
+            <a href="vendor-register.html"          class="portal-link"><span class="link-icon">📝</span><span>Register as Vendor</span><span class="arrow">→</span></a>
+          </div>
+          <div class="portal-footer">
+            <a href="vendor-login.html" class="portal-btn">🔐 Vendor Login →</a>
+          </div>
+        </div>
+
+        <!-- Setup / Tools -->
+        <div class="portal-card card-setup">
+          <div class="portal-header">
+            <div class="icon" style="background:#f1f5f9">🛠️</div>
+            <h2 style="color:#1e293b">Setup &amp; Tools</h2>
+            <p style="color:#64748b">Installation, configuration, and system tools</p>
+          </div>
+          <div class="portal-links">
+            <a href="install.php"       class="portal-link"><span class="link-icon">🚀</span><span>Web Installer</span><span class="arrow">→</span></a>
+            <a href="api/index.php"     class="portal-link"><span class="link-icon">🔌</span><span>API Endpoint</span><span class="arrow">→</span></a>
+          </div>
+          <div style="padding: 0 1.75rem 1rem">
+            <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:.625rem;padding:.75rem;font-size:.78rem;color:#92400e;line-height:1.5">
+              ⚠️ <strong>Delete install.php</strong> after completing setup. Do not leave it accessible in production.
+            </div>
+          </div>
+          <div class="portal-footer" style="border-top:1px solid #e2e8f0">
+            <a href="install.php" class="portal-btn">🚀 Run Installer</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Default Credentials -->
+    <div class="section" style="padding-top:0">
+      <div class="section-title">Default Login Credentials</div>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="label">👔 Staff Accounts</div>
+          <table>
+            <tr><td>Admin</td><td>admin@magentainvestments.ae</td></tr>
+            <tr><td>Password</td><td>admin123</td></tr>
+            <tr><td>CEO</td><td>ceo@magentainvestments.ae</td></tr>
+            <tr><td>Dept Head</td><td>depthead@magentainvestments.ae</td></tr>
+            <tr><td>Manager</td><td>manager@magentainvestments.ae</td></tr>
+            <tr><td>Employee</td><td>employee@magentainvestments.ae</td></tr>
+            <tr><td>Demo pwd</td><td>password123</td></tr>
+          </table>
+        </div>
+        <div class="info-card">
+          <div class="label">⚙️ Approval Thresholds</div>
+          <table>
+            <tr><td>Manager</td><td>Up to AED 5,000</td></tr>
+            <tr><td>Dept Head</td><td>Up to AED 25,000</td></tr>
+            <tr><td>CEO</td><td>Unlimited</td></tr>
+          </table>
+          <div style="margin-top:1rem">
+            <div class="label">🏢 Company</div>
+            <table>
+              <tr><td>Name</td><td>Magenta Investments LLC</td></tr>
+              <tr><td>VAT</td><td>100234567890003</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="label">🔧 Tech Stack</div>
+          <table>
+            <tr><td>Frontend</td><td>HTML + CSS + JS</td></tr>
+            <tr><td>Backend</td><td>PHP 8.1+</td></tr>
+            <tr><td>Database</td><td>MongoDB</td></tr>
+            <tr><td>Auth</td><td>JWT (HS256)</td></tr>
+            <tr><td>Hosting</td><td>cPanel / Any PHP host</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Magenta Investments LLC — Internal Procurement System &nbsp;|&nbsp;
+    <a href="https://github.com/msvadakkan/Purchase-Approval-System" target="_blank">GitHub</a>
+    &nbsp;|&nbsp; Built with PHP + MongoDB
+  </footer>
+
+</body>
+</html>

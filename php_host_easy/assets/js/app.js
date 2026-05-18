@@ -911,8 +911,8 @@ function loginHTML() {
     <div class="auth-card">
       <div class="auth-header">
         <div style="font-size:2.5rem;margin-bottom:.75rem">🛒</div>
-        <h1>Purchase Approval System</h1>
-        <p>Sign in to continue</p>
+        <h1>Magenta Investments LLC</h1>
+        <p>Purchase Approval System — Staff Login</p>
       </div>
       <div class="auth-body">
         <div id="login-error" class="alert alert-error" style="display:none"></div>
@@ -929,6 +929,7 @@ function loginHTML() {
         </form>
         <p style="text-align:center;font-size:.8rem;color:var(--gray-400);margin-top:1.25rem">
           Vendor? <a href="vendor-login.html" style="color:var(--primary)">Vendor Portal →</a>
+          &nbsp;|&nbsp; <a href="home.html" style="color:var(--gray-400)">Home</a>
         </p>
       </div>
     </div>
@@ -941,8 +942,8 @@ function appShellHTML() {
     <div id="app">
       <nav id="sidebar" class="sidebar">
         <div class="sidebar-logo">
-          <div class="logo-icon">P</div>
-          <div><span>ProcureFlow</span><small>Purchase Approval</small></div>
+          <div class="logo-icon">M</div>
+          <div><span>Magenta Investments</span><small>Purchase Approval</small></div>
         </div>
         <div id="sidebar-nav"></div>
         <div class="sidebar-footer" id="user-info"></div>

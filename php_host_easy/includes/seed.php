@@ -27,29 +27,29 @@ foreach ($levels as $level) {
 echo "✓ Approval levels seeded\n";
 
 // ── Default Admin User ────────────────────────────────────────────────────────
-$existing = db()->users->findOne(['email' => 'admin@company.com']);
+$existing = db()->users->findOne(['email' => 'admin@magentainvestments.ae']);
 if (!$existing) {
     db()->users->insertOne([
         '_id'        => new_id(),
         'name'       => 'System Admin',
-        'email'      => 'admin@company.com',
+        'email'      => 'admin@magentainvestments.ae',
         'password'   => hash_password('admin123'),
         'role'       => 'admin',
         'department' => 'Management',
         'is_active'  => 1,
         'created_at' => now_iso(),
     ]);
-    echo "✓ Admin user created (admin@company.com / admin123)\n";
+    echo "✓ Admin user created (admin@magentainvestments.ae / admin123)\n";
 } else {
     echo "- Admin user already exists\n";
 }
 
 // ── Demo Users ────────────────────────────────────────────────────────────────
 $demo_users = [
-    ['name' => 'John CEO',          'email' => 'ceo@company.com',      'role' => 'ceo',             'department' => 'Executive'],
-    ['name' => 'Sarah Dept Head',   'email' => 'depthead@company.com', 'role' => 'department_head', 'department' => 'Operations'],
-    ['name' => 'Mike Manager',      'email' => 'manager@company.com',  'role' => 'manager',         'department' => 'Procurement'],
-    ['name' => 'Alice Employee',    'email' => 'employee@company.com', 'role' => 'employee',        'department' => 'Finance'],
+    ['name' => 'John CEO',          'email' => 'ceo@magentainvestments.ae',      'role' => 'ceo',             'department' => 'Executive'],
+    ['name' => 'Sarah Dept Head',   'email' => 'depthead@magentainvestments.ae', 'role' => 'department_head', 'department' => 'Operations'],
+    ['name' => 'Mike Manager',      'email' => 'manager@magentainvestments.ae',  'role' => 'manager',         'department' => 'Procurement'],
+    ['name' => 'Alice Employee',    'email' => 'employee@magentainvestments.ae', 'role' => 'employee',        'department' => 'Finance'],
 ];
 foreach ($demo_users as $u) {
     if (!db()->users->findOne(['email' => $u['email']])) {
@@ -65,6 +65,24 @@ foreach ($demo_users as $u) {
         ]);
         echo "✓ Created {$u['role']}: {$u['email']}\n";
     }
+}
+
+// ── Default Company ───────────────────────────────────────────────────────────
+$admin = db()->users->findOne(['email' => 'admin@magentainvestments.ae']);
+if ($admin && !db()->companies->findOne(['name' => 'Magenta Investments LLC'])) {
+    db()->companies->insertOne([
+        '_id'          => new_id(),
+        'name'         => 'Magenta Investments LLC',
+        'trade_name'   => 'Magenta Investments',
+        'vat_number'   => '100234567890003',
+        'address'      => 'Office 401, Tower A, Business Bay, Dubai, UAE',
+        'phone'        => '+971 4 123 4567',
+        'email'        => 'info@magentainvestments.ae',
+        'website'      => 'www.magentainvestments.ae',
+        'is_active'    => true,
+        'created_at'   => now_iso(),
+    ]);
+    echo "✓ Company created: Magenta Investments LLC\n";
 }
 
 // ── MongoDB Indexes ───────────────────────────────────────────────────────────

@@ -121,8 +121,8 @@ export default function Layout({ children }) {
             <Building2 className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-white leading-tight tracking-wide">Purchase Approval</h1>
-            <p className="text-indigo-400 text-[11px]">Management System</p>
+            <h1 className="text-sm font-bold text-white leading-tight tracking-wide">Magenta Investments</h1>
+            <p className="text-indigo-400 text-[11px]">Procurement System</p>
           </div>
         </div>
         <button onClick={closeSidebar} className="lg:hidden p-1 text-indigo-400 hover:text-white">

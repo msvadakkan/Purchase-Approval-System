@@ -2,8 +2,8 @@ import './globals.css'
 import Providers from '@/components/Providers'
 
 export const metadata = {
-  title: 'Purchase Approval System',
-  description: 'Procurement management and approval workflow',
+  title: 'Magenta Investments LLC — Purchase Approval',
+  description: 'Procurement management and approval workflow for Magenta Investments LLC',
 }
 
 export default function RootLayout({ children }) {
