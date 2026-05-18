@@ -1,404 +1,236 @@
-# Purchase Approval System
+# ProcureFlow — Purchase Approval System
 
-A full-stack web application for multi-company purchase request approvals, vendor management, tender/requirement creation, quote comparison, and LPO (Local Purchase Order) generation.
+A complete multi-company purchase request and procurement system with vendor portal, tender management, quote comparison, and LPO generation.
 
-![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)
-![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![Next.js](https://img.shields.io/badge/Next.js-14-000000?logo=nextdotjs&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.1-777BB4?logo=php&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-7-47A248?logo=mongodb&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## Tech Stack
+## Two Project Versions
 
-| Layer    | Technology |
-|----------|-----------|
-| Frontend | React 18 + Vite + Tailwind CSS + Lucide Icons |
-| Backend  | PHP 8.2 (plain PHP, no framework) |
-| Database | MongoDB 7 |
-| Server   | Nginx (frontend) + Apache (PHP backend) |
+This repository contains **two fully independent, deployable versions** of the same system. Choose the one that fits your hosting environment.
+
+| | Version 1 — Next.js | Version 2 — PHP Easy |
+|---|---|---|
+| **Folder** | `/` (project root) | `php_host_easy/` |
+| **Frontend** | Next.js 14 + Tailwind CSS | Vanilla HTML + CSS + JS |
+| **Backend** | Next.js API Routes | PHP 8.1 (no framework) |
+| **Database** | MongoDB (via Node driver) | MongoDB (via PHP driver) |
+| **Best for** | VPS / Docker / Vercel | cPanel / Shared hosting |
+| **Install** | `docker compose up` or `npm run dev` | Upload files + run installer |
 
 ---
 
-## 🚀 Quick Deploy — Single Command
+## Features
+
+- **Multi-company** — register multiple companies, switch context per request
+- **Role-based approvals** — Employee → Manager → Dept Head → CEO chain with configurable thresholds
+- **Vendor Portal** — vendors self-register, browse open tenders, submit quotes
+- **Tender Management** — create requirements, collect quotes, compare prices
+- **LPO Generation** — UAE-format Local Purchase Orders with VAT, print/PDF export
+- **Admin Panel** — manage users, roles, approval thresholds
+- **Mobile responsive** — works on all screen sizes
+
+---
+
+## Version 1 — Next.js (Docker / VPS)
+
+### Quick Start — Docker (recommended)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/purchase-approval-system.git && \
-cd purchase-approval-system && \
-docker-compose up --build -d
+# Clone the repo
+git clone https://github.com/msvadakkan/Purchase-Approval-System.git
+cd Purchase-Approval-System
+
+# Start with Docker (MongoDB + Next.js app)
+docker compose up -d
+
+# Open in browser
+open http://localhost:3000
 ```
 
-Open **http://localhost** — the app is ready.
-
----
-
-## 🐳 Docker Station Installation Guide
-
-Docker Station is the Docker management UI on **Synology NAS** and other container platforms. Follow the steps below for your platform.
-
----
-
-### Option A — Synology NAS (Docker Station)
-
-#### Step 1 — Enable SSH and connect to your NAS
+### Quick Start — Local Dev
 
 ```bash
-ssh admin@YOUR_NAS_IP
+# Prerequisites: Node.js 18+, MongoDB running locally
+
+npm install
+cp .env.example .env.local    # edit MONGODB_URI if needed
+npm run dev
+# → http://localhost:3000
 ```
-
-#### Step 2 — Clone the repository
-
-```bash
-cd /volume1/docker
-git clone https://github.com/YOUR_USERNAME/purchase-approval-system.git
-cd purchase-approval-system
-```
-
-> If `git` is not installed, open **Package Center** → search **Git Server** → install it.
-
-#### Step 3 — Launch via Docker Compose
-
-```bash
-docker-compose up --build -d
-```
-
-This builds and starts three containers:
-- `frontend` — Nginx serving the React app (port 80)
-- `backend` — PHP 8.2 + Apache
-- `mongo` — MongoDB 7
-
-#### Step 4 — Open Docker Station UI (optional management)
-
-1. Open **DSM** → **Docker Station** (or **Container Manager** on DSM 7.2+)
-2. Go to **Project** tab → click **Create**
-3. Set Project Name: `purchase-approval`
-4. Set path to the cloned folder: `/volume1/docker/purchase-approval-system`
-5. Click **Build** — Docker Station reads `docker-compose.yml` automatically
-
-#### Step 5 — Access the app
-
-Open your browser: `http://YOUR_NAS_IP`
-
-> To expose externally, go to **Control Panel → Application Portal** and set up a reverse proxy pointing to port 80.
-
----
-
-### Option B — Docker Desktop (Windows / Mac)
-
-#### Step 1 — Clone the repo
-
-```bash
-git clone https://github.com/YOUR_USERNAME/purchase-approval-system.git
-cd purchase-approval-system
-```
-
-#### Step 2 — Build and start
-
-```bash
-docker-compose up --build -d
-```
-
-#### Step 3 — Open the app
-
-Go to **http://localhost** in your browser.
-
-To monitor containers, open **Docker Desktop** → **Containers** — you will see `frontend`, `backend`, and `mongo` all running.
-
----
-
-### Option C — Linux VPS / Server
-
-```bash
-# Install Docker & Docker Compose
-curl -fsSL https://get.docker.com | sh
-sudo usermod -aG docker $USER && newgrp docker
-
-# Clone and run
-git clone https://github.com/YOUR_USERNAME/purchase-approval-system.git
-cd purchase-approval-system
-docker-compose up --build -d
-```
-
----
-
-## 📦 Container Architecture
-
-```
-Browser
-   │
-   ▼
-┌─────────────────────────────────┐
-│  frontend (Nginx — port 80)     │
-│  - Serves React SPA             │
-│  - Proxies /api/* → backend:80  │
-└─────────────┬───────────────────┘
-              │
-              ▼
-┌─────────────────────────────────┐
-│  backend (PHP 8.2 + Apache)     │
-│  - REST API at /api/*           │
-│  - Serves uploaded files        │
-│  - Connects to MongoDB          │
-└─────────────┬───────────────────┘
-              │
-              ▼
-┌─────────────────────────────────┐
-│  mongo (MongoDB 7)              │
-│  - Persistent volume: mongo_data│
-└─────────────────────────────────┘
-```
-
----
-
-## ⚙️ Configuration
 
 ### Environment Variables
 
-Set these in `docker-compose.yml` under the `backend` service:
-
 | Variable | Default | Description |
-|----------|---------|-------------|
+|---|---|---|
 | `MONGODB_URI` | `mongodb://mongo:27017` | MongoDB connection string |
+| `MONGODB_DB` | `purchase_approval` | Database name |
+| `JWT_SECRET` | *(required)* | Secret for JWT signing |
 
-### Custom Port
+### Default Accounts
 
-To run on a port other than 80, edit `docker-compose.yml`:
-
-```yaml
-frontend:
-  ports:
-    - "8080:80"   # Change 8080 to any free port
-```
-
-### MongoDB Atlas (Cloud DB)
-
-To use MongoDB Atlas instead of the local container:
-
-1. Remove the `mongo` service and `mongo_data` volume from `docker-compose.yml`
-2. Set the environment variable on the `backend` service:
-
-```yaml
-backend:
-  environment:
-    MONGODB_URI: "mongodb+srv://USER:PASSWORD@cluster.mongodb.net/purchase_approval?retryWrites=true&w=majority"
-```
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@company.com | admin123 |
+| CEO | ceo@company.com | demo123 |
+| Dept Head | depthead@company.com | demo123 |
+| Manager | manager@company.com | demo123 |
+| Employee | employee@company.com | demo123 |
 
 ---
 
-## 🛠 Useful Docker Commands
+## Version 2 — PHP Easy (cPanel / Shared Hosting)
+
+Located in the `php_host_easy/` folder. **Zero framework dependencies** — plain PHP 8.1 + MongoDB driver.
+
+### Installation on cPanel
+
+1. **Upload** the `php_host_easy/` folder contents to your `public_html` (or a subdirectory)
+2. **Install PHP MongoDB driver** — in cPanel → Select PHP Version → Extensions → enable `mongodb`
+3. **Install Composer dependencies** via SSH:
+   ```bash
+   cd public_html
+   composer install --no-dev --optimize-autoloader
+   ```
+4. **Run the web installer** — visit `http://yoursite.com/install.php`
+   - Enter your MongoDB URI (MongoDB Atlas URI or local)
+   - Click **Install & Seed Database**
+   - **Delete `install.php`** after setup!
+5. **Log in** at `http://yoursite.com/` with `admin@company.com` / `admin123`
+
+### Installation via SSH (faster)
 
 ```bash
-# View running containers
-docker-compose ps
+# Upload files, then:
+cd public_html
+composer install --no-dev
+cp .env.example .env
+nano .env          # set MONGO_URI, MONGO_DB, JWT_SECRET
+php includes/seed.php
+```
 
-# View live logs
-docker-compose logs -f
+### MongoDB Atlas (free cloud DB)
 
-# Restart all services
-docker-compose restart
+If your host doesn't have MongoDB, use [MongoDB Atlas](https://www.mongodb.com/atlas) free tier:
+1. Create a free cluster
+2. Get the connection string: `mongodb+srv://user:pass@cluster.mongodb.net`
+3. Paste it as `MONGO_URI` in your `.env` or installer
 
-# Stop everything
-docker-compose down
+### File Structure
 
-# Stop and delete all data (volumes)
-docker-compose down -v
-
-# Rebuild after code changes
-docker-compose up --build -d
-
-# Open a shell inside backend
-docker-compose exec backend bash
-
-# Open MongoDB shell
-docker-compose exec mongo mongosh purchase_approval
+```
+php_host_easy/
+├── index.html              # Staff SPA entry point
+├── vendor-login.html       # Vendor sign-in
+├── vendor-register.html    # Vendor self-registration
+├── vendor-portal.html      # Vendor dashboard SPA
+├── install.php             # Web installer (delete after use)
+├── .htaccess               # Apache URL rewriting
+├── .env.example            # Environment template
+├── composer.json           # PHP dependencies
+├── api/
+│   ├── index.php           # API router
+│   ├── auth.php            # Login endpoints
+│   ├── requests.php        # Purchase requests CRUD
+│   ├── vendors.php         # Vendor management + login
+│   ├── tenders.php         # Tenders + quotes
+│   ├── lpos.php            # Local Purchase Orders
+│   ├── companies.php       # Company registry
+│   └── admin.php           # Approval levels + stats
+├── includes/
+│   ├── bootstrap.php       # .env loader
+│   ├── config.php          # DB + JWT config
+│   ├── auth.php            # JWT helpers + middleware
+│   └── seed.php            # Database seeder
+├── assets/
+│   ├── css/main.css        # All styles
+│   └── js/
+│       ├── api.js          # HTTP client
+│       ├── app.js          # Staff SPA
+│       └── vendor-app.js   # Vendor portal SPA
+└── uploads/                # Uploaded documents (auto-created)
 ```
 
 ---
 
-## Local Development (without Docker)
+## Contributing
 
-### Prerequisites
-- PHP 8.0+ with MongoDB PECL extension
-- Composer
-- MongoDB running on `localhost:27017`
-- Node.js 18+ + npm
+We welcome contributions to both versions! This project is open-source and community-driven.
 
-### Backend
-```bash
-cd backend
-composer install
-php -S localhost:8000 index.php
-```
+### How to Contribute
 
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev   # http://localhost:3000
-```
+1. **Fork** the repository
+2. **Create a feature branch**: `git checkout -b feature/your-feature-name`
+3. **Make your changes** — in either `/` (Next.js) or `php_host_easy/` (PHP)
+4. **Test** your changes work end-to-end
+5. **Commit** with a clear message: `git commit -m "feat: add email notifications"`
+6. **Push** and open a **Pull Request** against `main`
 
-Vite proxies `/api/*` to `http://localhost:8000`.
+### Contribution Ideas
 
----
+- [ ] Email notifications on approval/rejection
+- [ ] PDF export for LPOs (server-side)
+- [ ] Dashboard charts and analytics
+- [ ] Bulk approve/reject requests
+- [ ] Advanced search and filters
+- [ ] Audit trail export (CSV/Excel)
+- [ ] Two-factor authentication
+- [ ] REST API documentation (Swagger/OpenAPI)
+- [ ] Unit and integration tests
+- [ ] Dark mode
 
-## 📋 Demo Accounts
+### Versioning
 
-| Role            | Email                | Password     |
-|-----------------|----------------------|--------------|
-| Admin           | admin@company.com    | admin123     |
-| CEO             | ceo@company.com      | password123  |
-| Department Head | depthead@company.com | password123  |
-| Manager         | manager@company.com  | password123  |
-| Employee        | alice@company.com    | password123  |
+We follow [Semantic Versioning](https://semver.org/):
+- `MAJOR.MINOR.PATCH` — e.g. `v1.2.0`
+- Breaking changes → bump MAJOR
+- New features → bump MINOR
+- Bug fixes → bump PATCH
 
----
+Please update the version in `package.json` and tag releases accordingly.
 
-## 🏢 Demo Companies (auto-seeded)
+### Code Style
 
-| Company | TRN | City |
-|---------|-----|------|
-| Alpha Trading LLC | 100234567890003 | Dubai |
-| Beta Supplies FZE | 100456789012003 | Dubai (JAFZA) |
+- **Next.js**: ESLint + Prettier (`.eslintrc.json`)
+- **PHP**: PSR-12 coding standard, no framework coupling
+- Both versions should stay **feature-equivalent**
 
 ---
 
-## ✅ Approval Thresholds (default)
-
-| Role            | Approves up to |
-|-----------------|----------------|
-| Manager         | AED 5,000      |
-| Department Head | AED 25,000     |
-| CEO             | Unlimited      |
-
-Change thresholds in **Admin Panel → Approval Levels**.
-
----
-
-## ✨ Features
-
-### Multi-Company Management
-- Register unlimited companies under one account
-- Each company has: name, trade license, VAT/TRN, address, logo, contacts
-- Company switcher in sidebar — instantly switch context
-- Purchase requests and LPOs are linked to the active company
-
-### Purchase Requests & Approvals
-- Submit requests with amount, category, company
-- Auto-routed to correct approver based on amount thresholds
-- Multi-level: Manager → Department Head → CEO
-- Approve/reject with comments, full audit history
-
-### Requirements / Tenders
-- Create procurement requirements for vendor bidding
-- Vendors submit quotes with pricing, delivery, warranty terms
-- Side-by-side quote comparison sheet
-- Lowest bid highlighted automatically
-
-### LPO Generation
-- Generate formal Local Purchase Orders (UAE format)
-- Dynamic line items with quantity, unit, unit price
-- Auto-calculates subtotal, VAT (5%), total
-- Includes vendor bank details, payment terms, signature area
-- Print / Save as PDF with one click (`Ctrl+P`)
-- Status workflow: Draft → Sent → Acknowledged
-
-### Vendor Portal (`/vendor/*`)
-- Self-registration with UAE company details, bank details
-- File attachments: Trade License, VAT Certificate, Bank Document
-- Browse open tenders and submit quotes
-- Admin approves/rejects vendor registrations
-
-### Admin Panel
-- Manage users (create, edit, deactivate, delete)
-- Configure approval level thresholds
-- View system-wide stats
-
----
-
-## 📁 Project Structure
+## Architecture
 
 ```
-purchase-approval-system/
-├── docker-compose.yml
-├── backend/
-│   ├── Dockerfile
-│   ├── apache.conf
-│   ├── index.php              # Single-entry router
-│   ├── composer.json
-│   └── src/
-│       ├── DB.php
-│       ├── JWT.php
-│       ├── Middleware.php
-│       ├── helpers.php
-│       └── Controllers/
-│           ├── AuthController.php
-│           ├── UserController.php
-│           ├── AdminController.php
-│           ├── RequestController.php
-│           ├── VendorController.php
-│           ├── TenderController.php
-│           ├── CompanyController.php
-│           └── LPOController.php
-└── frontend/
-    ├── Dockerfile
-    ├── nginx.conf
-    ├── src/
-    │   ├── App.jsx            # Routes + lazy loading
-    │   ├── api.js
-    │   ├── context/
-    │   │   ├── AuthContext.jsx
-    │   │   ├── VendorAuthContext.jsx
-    │   │   └── CompanyContext.jsx
-    │   ├── components/
-    │   │   ├── Layout.jsx     # Sidebar + mobile hamburger
-    │   │   ├── VendorLayout.jsx
-    │   │   └── StatusBadge.jsx
-    │   └── pages/
-    │       ├── Login.jsx
-    │       ├── Dashboard.jsx
-    │       ├── Requests.jsx / NewRequest.jsx / RequestDetail.jsx
-    │       ├── Requirements.jsx / NewRequirement.jsx / RequirementDetail.jsx
-    │       ├── QuoteComparison.jsx
-    │       ├── PendingApprovals.jsx
-    │       ├── Companies.jsx / NewCompany.jsx
-    │       ├── LPOs.jsx / NewLPO.jsx / LPODetail.jsx
-    │       ├── Vendors.jsx
-    │       ├── AdminPanel.jsx
-    │       └── vendor/
-    │           ├── VendorLogin.jsx
-    │           ├── VendorRegister.jsx
-    │           ├── VendorDashboard.jsx
-    │           ├── VendorTenders.jsx
-    │           └── VendorTenderDetail.jsx
+┌─────────────────────────────────────────────────────┐
+│                     Browser                          │
+│  Staff SPA (index.html / Next.js pages)              │
+│  Vendor Portal (vendor-portal.html / /vendor/*)      │
+└──────────────────┬──────────────────────────────────┘
+                   │ REST API calls
+┌──────────────────▼──────────────────────────────────┐
+│  API Layer                                           │
+│  Next.js: src/app/api/**/route.js                    │
+│  PHP:     php_host_easy/api/*.php                    │
+└──────────────────┬──────────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────────┐
+│  MongoDB                                             │
+│  Collections: users, vendors, purchase_requests,     │
+│               tenders, quotes, lpos, companies,      │
+│               approval_levels                        │
+└─────────────────────────────────────────────────────┘
 ```
-
----
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/login` | Internal user login |
-| GET/POST | `/api/users` | List / create users |
-| PUT/DELETE | `/api/users/:id` | Update / delete user |
-| GET/PUT | `/api/admin/approval-levels` | Approval thresholds |
-| GET | `/api/admin/stats` | Dashboard stats |
-| GET/POST | `/api/requests` | List / create purchase requests |
-| POST | `/api/requests/:id/approve` | Approve request |
-| POST | `/api/requests/:id/reject` | Reject request |
-| GET/POST | `/api/tenders` | List / create tenders |
-| POST | `/api/tenders/:id/quote` | Submit vendor quote |
-| GET | `/api/tenders/:id/comparison` | Quote comparison |
-| GET/POST | `/api/vendors` | List / register vendors |
-| POST | `/api/vendors/login` | Vendor login |
-| POST | `/api/vendors/:id/approve` | Approve vendor |
-| GET/POST | `/api/companies` | List / create companies |
-| GET/PUT/DELETE | `/api/companies/:id` | Manage company |
-| GET/POST | `/api/lpos` | List / create LPOs |
-| GET/PUT/DELETE | `/api/lpos/:id` | Manage LPO |
 
 ---
 
 ## License
 
-MIT
+MIT License — free to use, modify, and distribute.
+
+---
+
+*Built with ❤️ for teams that need a simple, self-hosted procurement workflow.*

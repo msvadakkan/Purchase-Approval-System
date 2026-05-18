@@ -20,9 +20,28 @@ if ($method === 'GET' && !$id) {
     json_ok(array_map('mongo_doc', $rows));
 }
 
-// POST /api/vendors (vendor registration)
+// POST /api/vendors
 if ($method === 'POST' && !$id) {
-    $b = $_POST;
+    if ($action === 'login') {
+        $b = body();
+        $email = strtolower(trim($b['email'] ?? ''));
+        $pwd   = $b['password'] ?? '';
+        if (!$email || !$pwd) json_err('Email and password required');
+
+        $vendor = db()->vendors->findOne(['email' => $email]);
+        if (!$vendor || !verify_password($pwd, $vendor['password'])) {
+            json_err('Invalid email or password', 401);
+        }
+        if ($vendor['status'] !== 'approved') {
+            json_err('Your account is pending admin approval', 403);
+        }
+
+        $token = jwt_encode(['id' => (string)$vendor['_id'], 'email' => $vendor['email'], 'role' => 'vendor']);
+        json_ok(['token' => $token, 'vendor' => mongo_doc($vendor)]);
+    }
+
+    // Vendor registration logic
+    $b = !empty($_POST) ? $_POST : body();
     $required = ['company_name', 'email', 'password'];
     foreach ($required as $f) { if (empty($b[$f])) json_err("$f is required"); }
 

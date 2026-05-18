@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Simple HS256 JWT (no external library needed)
 function jwt_encode(array $payload): string {
