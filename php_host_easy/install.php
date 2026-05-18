@@ -221,7 +221,7 @@ $currentNum = $STEPS[$step]['num'] ?? 1;
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Inter',sans-serif;background:#faf5ff;min-height:100vh;padding:2rem 1rem}
+    body{font-family:'Inter',sans-serif;background:#fefce8;min-height:100vh;padding:2rem 1rem}
 
     /* Layout */
     .page{display:flex;gap:2rem;max-width:980px;margin:0 auto;align-items:flex-start}
@@ -229,25 +229,25 @@ $currentNum = $STEPS[$step]['num'] ?? 1;
     .main{flex:1;min-width:0}
 
     /* Sidebar brand */
-    .brand{background:linear-gradient(135deg,#1e1035,#3b0764);border-radius:16px;padding:1.5rem;color:#fff;margin-bottom:1.25rem;text-align:center}
-    .brand .mark{width:52px;height:52px;background:rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:#fff;margin:0 auto .75rem}
-    .brand .company{font-size:.85rem;font-weight:800;color:#fff}
-    .brand .sub{font-size:.7rem;color:#c4b5fd;margin-top:.2rem}
+    .brand{background:linear-gradient(135deg,#ec4899,#f472b6);border-radius:16px;padding:1.5rem;color:#fefce8;margin-bottom:1.25rem;text-align:center}
+    .brand .mark{width:52px;height:52px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:900;color:#fefce8;margin:0 auto .75rem}
+    .brand .company{font-size:.85rem;font-weight:800;color:#fefce8}
+    .brand .sub{font-size:.7rem;color:#fce7f3;margin-top:.2rem}
 
     /* Steps nav */
-    .steps-nav{background:#fff;border:1px solid #ede9fe;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:.25rem}
+    .steps-nav{background:#fdf4f7;border:1px solid #fbcfe8;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:.25rem}
     .step-item{display:flex;align-items:center;gap:.625rem;padding:.5rem .625rem;border-radius:8px;font-size:.8rem;font-weight:600;color:#94a3b8;transition:all .15s}
-    .step-item.active{background:#f5f3ff;color:#7c3aed}
-    .step-item.done{color:#059669}
+    .step-item.active{background:#fce7f3;color:#ec4899}
+    .step-item.done{color:#15803d}
     .step-item .num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;background:#f1f5f9;flex-shrink:0}
-    .step-item.active .num{background:#7c3aed;color:#fff}
-    .step-item.done .num{background:#d1fae5;color:#059669}
+    .step-item.active .num{background:#ec4899;color:#fefce8}
+    .step-item.done .num{background:#d1fae5;color:#15803d}
 
     /* Card */
-    .card{background:#fff;border:1px solid #ede9fe;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(124,58,237,.07)}
-    .card-header{padding:1.75rem 2rem 1.25rem;border-bottom:1px solid #f5f3ff;display:flex;align-items:center;gap:1rem}
-    .card-header .icon{width:44px;height:44px;background:#f5f3ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
-    .card-header h2{font-size:1.1rem;font-weight:800;color:#1e1035}
+    .card{background:#fdf4f7;border:1px solid #fbcfe8;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(236,72,153,.07)}
+    .card-header{padding:1.75rem 2rem 1.25rem;border-bottom:1px solid #fce7f3;display:flex;align-items:center;gap:1rem}
+    .card-header .icon{width:44px;height:44px;background:#fce7f3;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+    .card-header h2{font-size:1.1rem;font-weight:800;color:#831843}
     .card-header p{font-size:.8rem;color:#6b7280;margin-top:.2rem}
     .card-body{padding:1.75rem 2rem}
 
@@ -261,24 +261,24 @@ $currentNum = $STEPS[$step]['num'] ?? 1;
     .field{margin-bottom:1.25rem}
     .field label{display:block;font-size:.8rem;font-weight:700;color:#374151;margin-bottom:.4rem}
     .field label .hint{font-weight:400;color:#94a3b8;margin-left:.375rem}
-    .field input,.field select{width:100%;border:1.5px solid #e5e7eb;border-radius:.625rem;padding:.65rem .875rem;font-size:.875rem;font-family:inherit;transition:border-color .15s;background:#fff;color:#111827}
-    .field input:focus,.field select:focus{outline:none;border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+    .field input,.field select{width:100%;border:1.5px solid #fbcfe8;border-radius:.625rem;padding:.65rem .875rem;font-size:.875rem;font-family:inherit;transition:border-color .15s;background:#fefce8;color:#111827}
+    .field input:focus,.field select:focus{outline:none;border-color:#ec4899;box-shadow:0 0 0 3px rgba(236,72,153,.1)}
     .field input.mono{font-family:monospace;font-size:.8rem}
     .field .desc{font-size:.75rem;color:#6b7280;margin-top:.375rem;line-height:1.5}
 
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 
     /* Buttons */
-    .btn-row{display:flex;gap:.75rem;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid #f5f3ff}
+    .btn-row{display:flex;gap:.75rem;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid #fce7f3}
     .btn{padding:.7rem 1.5rem;border-radius:.625rem;font-size:.875rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:.4rem}
-    .btn-primary{background:#7c3aed;color:#fff}
-    .btn-primary:hover{background:#6d28d9}
-    .btn-outline{background:#fff;color:#6b7280;border:1.5px solid #e5e7eb}
-    .btn-outline:hover{background:#f9fafb}
-    .btn-skip{background:#f5f3ff;color:#7c3aed;margin-left:auto}
-    .btn-skip:hover{background:#ede9fe}
-    .btn-test{background:#f5f3ff;color:#7c3aed;border:1.5px solid #ddd6fe;padding:.55rem 1rem;font-size:.8rem}
-    .btn-test:hover{background:#ede9fe}
+    .btn-primary{background:#ec4899;color:#fefce8}
+    .btn-primary:hover{background:#db2777}
+    .btn-outline{background:#fefce8;color:#6b7280;border:1.5px solid #fbcfe8}
+    .btn-outline:hover{background:#fdf4f7}
+    .btn-skip{background:#f0fdf4;color:#15803d;border:1.5px solid #bbf7d0;margin-left:auto}
+    .btn-skip:hover{background:#dcfce7}
+    .btn-test{background:#fce7f3;color:#ec4899;border:1.5px solid #fbcfe8;padding:.55rem 1rem;font-size:.8rem}
+    .btn-test:hover{background:#fbcfe8}
 
     /* Test result */
     .test-result{margin-top:.75rem;padding:.75rem 1rem;border-radius:.625rem;font-size:.8rem;display:none}
@@ -288,27 +288,27 @@ $currentNum = $STEPS[$step]['num'] ?? 1;
     /* Alerts */
     .alert{padding:.875rem 1rem;border-radius:.625rem;font-size:.85rem;margin-bottom:1rem;display:flex;gap:.625rem;align-items:flex-start}
     .alert-err{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c}
-    .alert-info{background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1}
+    .alert-info{background:#f0fdf4;border:1px solid #bbf7d0;color:#15803d}
     .alert-warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
 
     /* Done */
     .done-wrap{text-align:center;padding:2rem 0}
     .done-wrap .big-icon{font-size:4rem;margin-bottom:1rem}
-    .done-wrap h2{font-size:1.4rem;font-weight:900;color:#1e1035;margin-bottom:.5rem}
+    .done-wrap h2{font-size:1.4rem;font-weight:900;color:#831843;margin-bottom:.5rem}
     .done-wrap p{color:#6b7280;font-size:.9rem;line-height:1.6}
-    .cred-table{width:100%;border-collapse:collapse;margin-top:1.25rem;text-align:left;border:1px solid #ede9fe;border-radius:.75rem;overflow:hidden}
-    .cred-table th{background:#f5f3ff;padding:.6rem 1rem;font-size:.75rem;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.05em}
-    .cred-table td{padding:.65rem 1rem;font-size:.825rem;border-top:1px solid #f5f3ff}
-    .cred-table td:first-child{font-weight:600;color:#374151;width:42%}
+    .cred-table{width:100%;border-collapse:collapse;margin-top:1.25rem;text-align:left;border:1px solid #fbcfe8;border-radius:.75rem;overflow:hidden}
+    .cred-table th{background:#fce7f3;padding:.6rem 1rem;font-size:.75rem;font-weight:700;color:#ec4899;text-transform:uppercase;letter-spacing:.05em}
+    .cred-table td{padding:.65rem 1rem;font-size:.825rem;border-top:1px solid #fce7f3}
+    .cred-table td:first-child{font-weight:600;color:#831843;width:42%}
     .cred-table td:last-child{font-family:monospace;color:#111827}
     .delete-warning{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:.75rem;padding:1rem 1.25rem;margin-top:1.25rem;font-size:.85rem;color:#b91c1c;line-height:1.6}
 
     /* Info box */
-    .info-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:.75rem;padding:1rem 1.25rem;font-size:.8rem;color:#5b21b6;line-height:1.7;margin-bottom:1.25rem}
-    .info-box a{color:#7c3aed;font-weight:700}
+    .info-box{background:#fce7f3;border:1px solid #fbcfe8;border-radius:.75rem;padding:1rem 1.25rem;font-size:.8rem;color:#9d174d;line-height:1.7;margin-bottom:1.25rem}
+    .info-box a{color:#ec4899;font-weight:700}
 
     /* Section sep */
-    .sep{border:none;border-top:1px solid #f0e6ff;margin:1.5rem 0}
+    .sep{border:none;border-top:1px solid #fce7f3;margin:1.5rem 0}
 
     @media(max-width:680px){
       .page{flex-direction:column}
@@ -664,7 +664,7 @@ $currentNum = $STEPS[$step]['num'] ?? 1;
 
           <table class="cred-table" style="margin-top:1.5rem;text-align:left">
             <tr><th colspan="2">Your Admin Login</th></tr>
-            <tr><td>Staff Login</td><td><a href="portal.html" style="color:#7c3aed;font-weight:700">portal.html</a></td></tr>
+            <tr><td>Staff Login</td><td><a href="portal.html" style="color:#ec4899;font-weight:700">portal.html</a></td></tr>
             <tr><td>Admin Email</td><td><?= htmlspecialchars($createdAdminEmail ?? '(see install log above)') ?></td></tr>
             <tr><td>Password</td><td>The password you set during setup</td></tr>
             <tr><td>Home Page</td><td><a href="index.html" style="color:#7c3aed">index.html</a></td></tr>
@@ -675,7 +675,7 @@ $currentNum = $STEPS[$step]['num'] ?? 1;
             Delete <code>install.php</code> from your server immediately after setup. Leaving it accessible allows anyone to overwrite your configuration.
           </div>
 
-          <a href="portal.html" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;padding:.875rem 2rem;background:#7c3aed;color:#fff;border-radius:10px;font-weight:700;text-decoration:none;font-size:.95rem">
+          <a href="portal.html" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;padding:.875rem 2rem;background:#ec4899;color:#fefce8;border-radius:10px;font-weight:700;text-decoration:none;font-size:.95rem">
             🔐 Go to Staff Login →
           </a>
         </div>

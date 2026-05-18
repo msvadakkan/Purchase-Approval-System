@@ -183,10 +183,10 @@ async function renderDashboard(el) {
   el.innerHTML = `
     <div class="page-header"><h2>Dashboard</h2><p>Welcome back, ${currentUser?.name}</p></div>
     <div class="grid grid-4 mb-4">
-      ${statCard('📋', stats.total_requests   ?? 0, 'Total Requests',  '#e0e7ff', '#6366f1')}
+      ${statCard('📋', stats.total_requests   ?? 0, 'Total Requests',  '#fce7f3', '#ec4899')}
       ${statCard('⏳', stats.pending_requests  ?? 0, 'Pending',         '#fef3c7', '#f59e0b')}
       ${statCard('✅', stats.approved_requests ?? 0, 'Approved',        '#d1fae5', '#10b981')}
-      ${statCard('📢', stats.open_tenders      ?? 0, 'Open Tenders',    '#f0fdfa', '#0d9488')}
+      ${statCard('📢', stats.open_tenders      ?? 0, 'Open Tenders',    '#f0fdf4', '#22c55e')}
     </div>
     <div class="card">
       <div class="card-header">
@@ -393,7 +393,7 @@ async function renderTenders(el) {
       ${rows.map(t => `<div class="card card-body">
         <div class="flex items-center justify-between mb-2">
           ${badge(t.status)}
-          ${t.category ? `<span class="badge" style="background:#f0fdfa;color:#0d9488">${esc(t.category)}</span>` : ''}
+          ${t.category ? `<span class="badge" style="background:#f0fdf4;color:#22c55e">${esc(t.category)}</span>` : ''}
         </div>
         <div style="font-weight:700;margin-bottom:.25rem">${esc(t.title)}</div>
         ${t.deadline ? `<div class="text-xs text-gray">Due: ${fmtDate(t.deadline)}</div>` : ''}
@@ -816,7 +816,7 @@ async function renderAdmin(el) {
               ${users.map(u => `<tr>
                 <td style="font-weight:600">${esc(u.name)}</td>
                 <td>${esc(u.email)}</td>
-                <td><span class="badge" style="background:#e0e7ff;color:#3730a3">${esc(u.role)}</span></td>
+                <td><span class="badge" style="background:#fce7f3;color:#9d174d">${esc(u.role)}</span></td>
                 <td><span class="badge ${u.is_active ? 'badge-approved' : 'badge-cancelled'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
                 <td><button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}','${esc(u.name)}')">Delete</button></td>
               </tr>`).join('')}
@@ -929,7 +929,7 @@ function loginHTML() {
         </form>
         <p style="text-align:center;font-size:.8rem;color:var(--gray-400);margin-top:1.25rem">
           Vendor? <a href="vendor-login.html" style="color:var(--primary)">Vendor Portal →</a>
-          &nbsp;|&nbsp; <a href="home.html" style="color:var(--gray-400)">Home</a>
+          &nbsp;|&nbsp; <a href="index.html" style="color:var(--gray-400)">Home</a>
         </p>
       </div>
     </div>
@@ -946,6 +946,9 @@ function appShellHTML() {
           <div><span>Magenta Investments</span><small>Purchase Approval</small></div>
         </div>
         <div id="sidebar-nav"></div>
+        <div class="nav-group" style="padding-top:0">
+          <a class="nav-item" href="index.html"><span>🏠</span><span>Home</span></a>
+        </div>
         <div class="sidebar-footer" id="user-info"></div>
       </nav>
       <div class="main-area">

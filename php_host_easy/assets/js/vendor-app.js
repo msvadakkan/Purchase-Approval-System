@@ -61,7 +61,7 @@ function renderVendorUserInfo() {
   const initials = (currentVendor.company_name || 'V').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   el.innerHTML = `
     <div class="user-info">
-      <div class="avatar" style="background:#0d9488">${initials}</div>
+      <div class="avatar" style="background:#22c55e">${initials}</div>
       <div><div class="name">${esc(currentVendor.company_name)}</div><div class="role">Vendor</div></div>
     </div>
     <button class="logout-btn" onclick="vendorLogout()">Sign Out</button>`;
@@ -107,7 +107,7 @@ async function renderVendorDashboard(el) {
     </div>
     <div class="grid grid-2 mb-4">
       <div class="card stat-card">
-        <div class="stat-icon" style="background:#f0fdfa;color:#0d9488">📢</div>
+        <div class="stat-icon" style="background:#f0fdf4;color:#22c55e">📢</div>
         <div><div class="stat-num">${open.length}</div><div class="stat-label">Open Tenders</div></div>
       </div>
       <div class="card stat-card">
@@ -116,7 +116,7 @@ async function renderVendorDashboard(el) {
       </div>
     </div>
     <a href="#tenders" class="card card-body flex items-center gap-4 mb-4"
-       style="background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;text-decoration:none;display:flex">
+       style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;text-decoration:none;display:flex">
       <div style="width:44px;height:44px;background:rgba(255,255,255,.2);border-radius:.75rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0">📢</div>
       <div style="flex:1"><div style="font-weight:700">Browse Open Tenders</div><div style="font-size:.8rem;opacity:.8;margin-top:.125rem">View requirements and submit your quotes</div></div>
       <span style="font-size:1.2rem">→</span>
@@ -153,7 +153,7 @@ async function renderVendorTenders(el) {
             <div style="flex:1">
               <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap">
                 <span class="badge badge-open">Open</span>
-                ${t.category ? `<span class="badge" style="background:#f0fdfa;color:#0d9488">${esc(t.category)}</span>` : ''}
+                ${t.category ? `<span class="badge" style="background:#f0fdf4;color:#22c55e">${esc(t.category)}</span>` : ''}
               </div>
               <div style="font-weight:700;font-size:1rem">${esc(t.title)}</div>
               ${t.description ? `<div style="font-size:.85rem;color:var(--gray-500);margin-top:.375rem">${esc(t.description.slice(0, 120))}${t.description.length > 120 ? '…' : ''}</div>` : ''}
@@ -162,7 +162,7 @@ async function renderVendorTenders(el) {
                 ${t.budget ? `<span>💰 Budget: AED ${fmt(t.budget)}</span>` : ''}
               </div>
             </div>
-            <div style="width:40px;height:40px;background:#f0fdfa;border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#0d9488;font-size:1.1rem">→</div>
+            <div style="width:40px;height:40px;background:#f0fdf4;border-radius:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#22c55e;font-size:1.1rem">→</div>
           </div>
         </div>`).join('')}`;
 }
@@ -193,18 +193,18 @@ async function renderVendorTenderDetail(el, id) {
     </div>
 
     ${myQuote ? `
-    <div class="card card-body mb-4" style="background:#f0fdfa;border-color:#99f6e4;max-width:700px">
+    <div class="card card-body mb-4" style="background:#dcfce7;border-color:#bbf7d0;max-width:700px">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem">
         <span style="font-size:1.25rem">✅</span>
-        <strong style="color:#0f766e">Your Quote Submitted</strong>
+        <strong style="color:#15803d">Your Quote Submitted</strong>
       </div>
       <div class="grid grid-4">
-        <div><div class="text-xs" style="color:#0d9488">Unit Price</div><div class="font-bold" style="color:#0f172a">AED ${fmt(myQuote.unit_price)}</div></div>
-        ${myQuote.delivery_days ? `<div><div class="text-xs" style="color:#0d9488">Delivery</div><div class="font-bold">${myQuote.delivery_days} days</div></div>` : ''}
-        ${myQuote.validity_days ? `<div><div class="text-xs" style="color:#0d9488">Valid For</div><div class="font-bold">${myQuote.validity_days} days</div></div>` : ''}
-        <div><div class="text-xs" style="color:#0d9488">Submitted</div><div class="font-bold">${fmtDate(myQuote.created_at)}</div></div>
+        <div><div class="text-xs" style="color:#22c55e">Unit Price</div><div class="font-bold" style="color:#0f172a">AED ${fmt(myQuote.unit_price)}</div></div>
+        ${myQuote.delivery_days ? `<div><div class="text-xs" style="color:#22c55e">Delivery</div><div class="font-bold">${myQuote.delivery_days} days</div></div>` : ''}
+        ${myQuote.validity_days ? `<div><div class="text-xs" style="color:#22c55e">Valid For</div><div class="font-bold">${myQuote.validity_days} days</div></div>` : ''}
+        <div><div class="text-xs" style="color:#22c55e">Submitted</div><div class="font-bold">${fmtDate(myQuote.created_at)}</div></div>
       </div>
-      ${myQuote.notes ? `<p style="font-size:.85rem;color:#0f766e;margin-top:.75rem;padding-top:.75rem;border-top:1px solid #99f6e4">${esc(myQuote.notes)}</p>` : ''}
+      ${myQuote.notes ? `<p style="font-size:.85rem;color:#16a34a;margin-top:.75rem;padding-top:.75rem;border-top:1px solid #bbf7d0">${esc(myQuote.notes)}</p>` : ''}
     </div>` : ''}
 
     ${!isClosed && !myQuote ? `
@@ -237,7 +237,7 @@ async function renderVendorTenderDetail(el, id) {
         </div>
         <div class="btn-group">
           <a href="#tenders" class="btn btn-outline">Cancel</a>
-          <button class="btn btn-primary" onclick="submitQuote('${t.id}')" style="background:#0d9488">📤 Submit Quote</button>
+          <button class="btn btn-primary" onclick="submitQuote('${t.id}')" style="background:#22c55e">📤 Submit Quote</button>
         </div>
       </div>
     </div>` : ''}
@@ -247,7 +247,7 @@ async function renderVendorTenderDetail(el, id) {
       <div style="font-size:2rem;margin-bottom:.5rem">🔒</div>
       <p style="font-weight:600;color:var(--gray-700)">This tender is closed</p>
       <p style="font-size:.85rem;color:var(--gray-400);margin-top:.25rem">Quote submission is no longer available</p>
-      <a href="#tenders" style="display:inline-block;margin-top:1rem;color:#0d9488;font-size:.875rem">Browse other tenders</a>
+      <a href="#tenders" style="display:inline-block;margin-top:1rem;color:#22c55e;font-size:.875rem">Browse other tenders</a>
     </div>` : ''}`;
 }
 
@@ -299,7 +299,7 @@ async function renderMyQuotes(el) {
             ${allQuotes.length === 0
               ? '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray-400)">No quotes submitted yet</td></tr>'
               : allQuotes.map(q => `<tr>
-                  <td style="font-weight:600"><a href="#tenders/${q.tender_id}" style="color:#0d9488">${esc(q.tender_title)}</a></td>
+                  <td style="font-weight:600"><a href="#tenders/${q.tender_id}" style="color:#22c55e">${esc(q.tender_title)}</a></td>
                   <td style="font-weight:700">AED ${fmt(q.unit_price)}</td>
                   <td>${q.delivery_days ? q.delivery_days + ' days' : '—'}</td>
                   <td>${q.validity_days ? q.validity_days + ' days' : '—'}</td>
@@ -327,10 +327,13 @@ function vendorShellHTML() {
     <div id="app">
       <nav id="sidebar" class="sidebar">
         <div class="sidebar-logo">
-          <div class="logo-icon" style="background:#0d9488">M</div>
+          <div class="logo-icon" style="background:#22c55e">M</div>
           <div><span>Vendor Portal</span><small>Magenta Investments LLC</small></div>
         </div>
         <div id="sidebar-nav"></div>
+        <div class="nav-group" style="padding-top:0">
+          <a class="nav-item" href="index.html"><span>🏠</span><span>Home</span></a>
+        </div>
         <div class="sidebar-footer" id="user-info"></div>
       </nav>
       <div class="main-area">
