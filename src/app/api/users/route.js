@@ -39,6 +39,7 @@ export async function POST(request) {
     const result = await users.insertOne({
       name, email, role, department: department || '',
       is_active: true,
+      can_view_tenders: body.can_view_tenders ?? false,
       password_hash: await bcrypt.hash(password, 10),
       created_at: new Date(),
     })

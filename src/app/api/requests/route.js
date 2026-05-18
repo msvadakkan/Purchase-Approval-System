@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { col } from '@/lib/db'
 import { getUser } from '@/lib/auth'
 import { normalize, toObjectId } from '@/lib/helpers'
+import { notifyRequestCreated } from '@/lib/email'
 
 const APPROVER_ROLES = ['admin', 'ceo', 'department_head', 'manager']
 
@@ -76,7 +77,15 @@ export async function POST(request) {
     })
 
     const doc = await (await col('purchase_requests')).findOne({ _id: result.insertedId })
-    return NextResponse.json(await enrich(doc), { status: 201 })
+    const enriched = await enrich(doc)
+
+    // Send email notifications (non-blocking)
+    const approvers = await (await col('users'))
+      .find({ role: approverRole, is_active: true }, { projection: { name: 1, email: 1 } })
+      .toArray()
+    notifyRequestCreated(enriched, user.email, user.name, approvers).catch(() => {})
+
+    return NextResponse.json(enriched, { status: 201 })
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }

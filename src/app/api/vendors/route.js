@@ -65,6 +65,7 @@ export async function POST(request) {
         swift_code:     formData.get('swift_code')     || '',
         branch:         formData.get('branch')         || '',
       },
+      categories:     formData.get('categories') ? formData.get('categories').split(',').map(c => c.trim()).filter(Boolean) : [],
       attachments, status: 'pending', created_at: new Date(),
     })
     return NextResponse.json({ id: result.insertedId.toString(), message: 'Registered. Awaiting approval.' }, { status: 201 })

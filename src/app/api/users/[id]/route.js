@@ -19,6 +19,7 @@ export async function PUT(request, { params }) {
       if (body[f] !== undefined) set[f] = body[f]
     }
     if (body.is_active !== undefined) set.is_active = body.is_active
+    if (body.can_view_tenders !== undefined) set.can_view_tenders = body.can_view_tenders
     if (body.password) set.password_hash = await bcrypt.hash(body.password, 10)
     if (!Object.keys(set).length)
       return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })

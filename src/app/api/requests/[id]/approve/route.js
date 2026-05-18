@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { col } from '@/lib/db'
 import { getUser } from '@/lib/auth'
 import { toObjectId } from '@/lib/helpers'
+import { notifyRequestApproved } from '@/lib/email'
 
 const APPROVER_ROLES = ['admin', 'ceo', 'department_head', 'manager']
 
@@ -31,6 +32,13 @@ export async function POST(request, { params }) {
       approver_name: user.name, approver_role: user.role,
       action: 'approved', comments: body.comments || null, created_at: new Date(),
     })
+
+    // Send email notification to requester (non-blocking)
+    const requester = await (await col('users')).findOne({ _id: doc.requester_id }, { projection: { name: 1, email: 1 } })
+    if (requester) {
+      notifyRequestApproved(doc, requester.email, requester.name, user.name).catch(() => {})
+    }
+
     return NextResponse.json({ message: 'Request approved' })
   } catch (e) {
     return NextResponse.json({ error: e.message }, { status: 500 })

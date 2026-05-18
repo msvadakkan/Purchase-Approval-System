@@ -93,7 +93,7 @@ export default function VendorRegisterPage() {
 
           <SECTION title="🔐 Account Credentials">
             <div className="grid grid-cols-2 gap-4">
-              <FL label="Email Address" required><input type="email" value={form.email} onChange={set('email')} className={I} placeholder="vendor@company.com" required /></FL>
+              <FL label="Email Address" required><input type="email" value={form.email} onChange={set('email')} className={I} placeholder="vendor@magenta-investments.com" required /></FL>
               <div />
               <FL label="Password" required><input type="password" value={form.password} onChange={set('password')} className={I} placeholder="••••••••" required minLength={6} /></FL>
               <FL label="Confirm Password" required><input type="password" value={form.confirm_password} onChange={set('confirm_password')} className={I} placeholder="••••••••" required /></FL>

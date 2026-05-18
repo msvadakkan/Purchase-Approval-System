@@ -6,18 +6,18 @@ let seeded = false
 export async function seed() {
   if (seeded) return
   const users = await col('users')
-  if (await users.countDocuments({ email: 'admin@magentainvestments.ae' }) > 0) {
+  if (await users.countDocuments({ email: 'admin@magenta-investments.com' }) > 0) {
     seeded = true
     return
   }
 
   const demoUsers = [
-    ['System Admin',   'admin@magentainvestments.ae',    'admin123',    'admin',           'IT'],
-    ['John CEO',       'ceo@magentainvestments.ae',       'password123', 'ceo',             'Executive'],
-    ['Sarah Head',     'depthead@magentainvestments.ae',  'password123', 'department_head', 'Finance'],
-    ['Mike Manager',   'manager@magentainvestments.ae',   'password123', 'manager',         'Operations'],
-    ['Alice Employee', 'alice@magentainvestments.ae',     'password123', 'employee',        'Operations'],
-    ['Bob Employee',   'bob@magentainvestments.ae',       'password123', 'employee',        'Finance'],
+    ['System Admin',   'admin@magenta-investments.com',    'admin123',    'admin',           'IT'],
+    ['John CEO',       'ceo@magenta-investments.com',       'password123', 'ceo',             'Executive'],
+    ['Sarah Head',     'depthead@magenta-investments.com',  'password123', 'department_head', 'Finance'],
+    ['Mike Manager',   'manager@magenta-investments.com',   'password123', 'manager',         'Operations'],
+    ['Alice Employee', 'alice@magenta-investments.com',     'password123', 'employee',        'Operations'],
+    ['Bob Employee',   'bob@magenta-investments.com',       'password123', 'employee',        'Finance'],
   ]
 
   for (const [name, email, pwd, role, department] of demoUsers) {
@@ -29,7 +29,7 @@ export async function seed() {
     })
   }
 
-  const admin = await users.findOne({ email: 'admin@magentainvestments.ae' })
+  const admin = await users.findOne({ email: 'admin@magenta-investments.com' })
   const adminId = admin._id.toString()
 
   const companies = await col('companies')
@@ -42,8 +42,8 @@ export async function seed() {
       address: 'Office 401, Tower A, Business Bay',
       city: 'Dubai', country: 'UAE',
       phone: '+971 4 123 4567',
-      email: 'info@magentainvestments.ae',
-      website: 'www.magentainvestments.ae',
+      email: 'info@magenta-investments.com',
+      website: 'www.magenta-investments.com',
       logo_filename: null,
       owner_id: adminId,
       is_active: true,

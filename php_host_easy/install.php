@@ -103,7 +103,7 @@ $allPassed = array_reduce($checks, fn($c, $i) => $c && $i[1], true);
       <p style="color:#64748b;font-size:.875rem">Your system is ready to use.</p>
       <table class="cred-table">
         <tr><td>URL</td><td><a href="index.html" style="color:#0d9488">index.html</a></td></tr>
-        <tr><td>Admin Email</td><td>admin@company.com</td></tr>
+        <tr><td>Admin Email</td><td>admin@magenta-investments.com</td></tr>
         <tr><td>Admin Password</td><td>admin123</td></tr>
         <tr><td>Demo Password</td><td>demo123 (for other users)</td></tr>
       </table>

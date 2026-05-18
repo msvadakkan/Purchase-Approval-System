@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import api from '@/lib/api'
 
 const CATEGORIES = ['IT Equipment', 'Office Supplies', 'Furniture', 'Services', 'Construction', 'Catering', 'Marketing', 'Software', 'Other']
+const DEPARTMENTS = ['Finance', 'IT', 'Operations', 'HR', 'Marketing', 'Procurement', 'Legal', 'Administration', 'Facilities', 'Sales']
 
 export default function NewRequirementPage() {
   const router = useRouter()
@@ -55,10 +56,12 @@ export default function NewRequirementPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-              <input value={form.department} onChange={set('department')}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="e.g. Operations" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Department <span className="text-red-500">*</span></label>
+              <select value={form.department} onChange={set('department')} required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="">Select department…</option>
+                {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
             </div>
           </div>
 

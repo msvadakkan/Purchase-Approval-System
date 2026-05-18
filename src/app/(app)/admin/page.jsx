@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Shield, Crown, Building2, UserCog, HardHat, Pencil, Trash2, UserPlus } from 'lucide-react'
+import { Shield, Crown, Building2, UserCog, HardHat, Pencil, Trash2, UserPlus, ClipboardList } from 'lucide-react'
 import api from '@/lib/api'
 
 const ROLES = [
@@ -18,6 +18,9 @@ const ROLE_COLORS = {
   manager:         'bg-green-100  text-green-700',
   employee:        'bg-gray-100   text-gray-700',
 }
+
+// Roles that can have can_view_tenders toggled (privileged roles always have access)
+const TENDER_PERMISSION_ROLES = ['manager', 'employee']
 
 export default function AdminPage() {
   const [tab, setTab] = useState('levels')
@@ -121,15 +124,15 @@ function ApprovalLevels() {
   )
 }
 
-const EMPTY_FORM = { name: '', email: '', password: '', role: 'employee', department: '', is_active: 1 }
+const EMPTY_FORM = { name: '', email: '', password: '', role: 'employee', department: '', is_active: 1, can_view_tenders: false }
 
 function UsersTab() {
-  const [users, setUsers]   = useState([])
+  const [users, setUsers]     = useState([])
   const [loading, setLoading] = useState(true)
-  const [modal, setModal]   = useState(null)
-  const [form, setForm]     = useState(EMPTY_FORM)
-  const [saving, setSaving] = useState(false)
-  const [error, setError]   = useState('')
+  const [modal, setModal]     = useState(null)
+  const [form, setForm]       = useState(EMPTY_FORM)
+  const [saving, setSaving]   = useState(false)
+  const [error, setError]     = useState('')
 
   const load = async () => {
     try { const { data } = await api.get('/users'); setUsers(data) }
@@ -141,7 +144,11 @@ function UsersTab() {
 
   const openCreate = () => { setForm(EMPTY_FORM); setError(''); setModal('create') }
   const openEdit   = (u) => {
-    setForm({ name: u.name, email: u.email, password: '', role: u.role, department: u.department ?? '', is_active: u.is_active })
+    setForm({
+      name: u.name, email: u.email, password: '', role: u.role,
+      department: u.department ?? '', is_active: u.is_active,
+      can_view_tenders: !!u.can_view_tenders,
+    })
     setError(''); setModal(u)
   }
 
@@ -169,6 +176,18 @@ function UsersTab() {
     catch (err) { alert(err.response?.data?.error || 'Delete failed') }
   }
 
+  // Quick-toggle can_view_tenders without opening modal
+  const toggleTenders = async (u) => {
+    try {
+      await api.put(`/users/${u.id}`, { can_view_tenders: !u.can_view_tenders })
+      await load()
+    } catch {
+      alert('Failed to update tender access')
+    }
+  }
+
+  const showTenderToggle = (role) => TENDER_PERMISSION_ROLES.includes(role)
+
   return (
     <>
       <div className="bg-white rounded-xl border border-gray-200">
@@ -186,7 +205,7 @@ function UsersTab() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50 text-left">
-                  {['Name', 'Email', 'Role', 'Department', 'Status', 'Actions'].map(h => (
+                  {['Name', 'Email', 'Role', 'Department', 'Status', 'Tenders', 'Actions'].map(h => (
                     <th key={h} className="px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
                   ))}
                 </tr>
@@ -209,6 +228,23 @@ function UsersTab() {
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${u.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                           {u.is_active ? 'Active' : 'Inactive'}
                         </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        {showTenderToggle(u.role) ? (
+                          <button
+                            onClick={() => toggleTenders(u)}
+                            title={u.can_view_tenders ? 'Click to revoke tender access' : 'Click to grant tender access'}
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition-colors ${
+                              u.can_view_tenders
+                                ? 'bg-violet-100 text-violet-700 hover:bg-violet-200'
+                                : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                            }`}>
+                            <ClipboardList className="w-3 h-3" />
+                            {u.can_view_tenders ? 'Enabled' : 'Disabled'}
+                          </button>
+                        ) : (
+                          <span className="text-xs text-gray-400">—</span>
+                        )}
                       </td>
                       <td className="px-5 py-4">
                         <div className="flex gap-2">
@@ -240,7 +276,7 @@ function UsersTab() {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1">Email *</label>
-                  <input type="email" value={form.email} onChange={set('email')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="jane@company.com" />
+                  <input type="email" value={form.email} onChange={set('email')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="jane@magenta-investments.com" />
                 </div>
               </div>
               <div>
@@ -261,14 +297,27 @@ function UsersTab() {
                   <input value={form.department} onChange={set('department')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g. Finance" />
                 </div>
               </div>
-              {modal !== 'create' && (
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input type="checkbox" checked={!!form.is_active}
-                    onChange={e => setForm(f => ({ ...f, is_active: e.target.checked ? 1 : 0 }))}
-                    className="w-4 h-4 rounded" />
-                  <span className="text-sm text-gray-700">Account is active</span>
-                </label>
-              )}
+              <div className="flex flex-col gap-3">
+                {modal !== 'create' && (
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" checked={!!form.is_active}
+                      onChange={e => setForm(f => ({ ...f, is_active: e.target.checked ? 1 : 0 }))}
+                      className="w-4 h-4 rounded" />
+                    <span className="text-sm text-gray-700">Account is active</span>
+                  </label>
+                )}
+                {showTenderToggle(form.role) && (
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input type="checkbox" checked={!!form.can_view_tenders}
+                      onChange={e => setForm(f => ({ ...f, can_view_tenders: e.target.checked }))}
+                      className="w-4 h-4 rounded" />
+                    <span className="text-sm text-gray-700 flex items-center gap-1.5">
+                      <ClipboardList className="w-4 h-4 text-violet-500" />
+                      Can view department tenders
+                    </span>
+                  </label>
+                )}
+              </div>
             </div>
             <div className="flex gap-3 mt-6">
               <button onClick={() => setModal(null)} className="flex-1 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50">Cancel</button>

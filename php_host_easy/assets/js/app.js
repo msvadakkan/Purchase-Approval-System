@@ -919,7 +919,7 @@ function loginHTML() {
         <form id="login-form">
           <div class="form-group">
             <label class="form-label">Email Address</label>
-            <input type="email" id="email" class="form-control" placeholder="admin@company.com" required>
+            <input type="email" id="email" class="form-control" placeholder="admin@magenta-investments.com" required>
           </div>
           <div class="form-group">
             <label class="form-label">Password</label>
